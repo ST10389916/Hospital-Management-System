@@ -1,4 +1,4 @@
-package za.ac.tuthospitalmanagementsystem
+package za.ac.hospitalmanagementsystem
 
 
 class Appointment(val patient:String? = null, val doctor:String?=null,val disease:String?=null,val availability:String?=null,val date: String?=null)

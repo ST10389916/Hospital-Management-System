@@ -1,4 +1,4 @@
-package za.ac.tuthospitalmanagementsystem
+package za.ac.hospitalmanagementsystem
 
 import android.app.DatePickerDialog
 import android.content.Intent

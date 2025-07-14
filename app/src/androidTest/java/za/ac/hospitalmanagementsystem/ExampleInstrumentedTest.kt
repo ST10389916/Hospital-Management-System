@@ -1,4 +1,4 @@
-package za.ac.tuthospitalmanagementsystem
+package za.ac.hospitalmanagementsystem
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

@@ -1,4 +1,4 @@
-package za.ac.tuthospitalmanagementsystem
+package za.ac.hospitalmanagementsystem
 
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -24,37 +24,34 @@ import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import java.util.*
 
-class DoctorActivity : AppCompatActivity() {
+class AdminActivity : AppCompatActivity() {
     private lateinit var toggle : ActionBarDrawerToggle
     private lateinit var database : DatabaseReference
     private var STORAGE_CODE = 1001
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_doctor)
+        setContentView(R.layout.activity_admin)
 
-        val drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-
-        setSupportActionBar(toolbar)
-        supportActionBar!!.title = "Doctor"
         val nameTextView = findViewById<TextView>(R.id.textViewName)
         val usernameTextView = findViewById<TextView>(R.id.textViewUsername)
         val numberTextView = findViewById<TextView>(R.id.textViewUserNumber)
         val dateTextView = findViewById<TextView>(R.id.textViewTime)
 
+        val name= intent.getStringExtra("name").toString()
+        val surname= intent.getStringExtra("surname").toString()
+        val number= intent.getStringExtra("number").toString()
+        val username= intent.getStringExtra("userName").toString()
         val date = Date()
         dateTextView.text = (date).toString()
-
-        val name: String = intent.getStringExtra("name").toString()
-        val surname: String= intent.getStringExtra("surname").toString()
-        val number: String= intent.getStringExtra("number").toString()
-        val username: String= intent.getStringExtra("username").toString()
-
-        "$name $surname".also { nameTextView.text = it }
+        nameTextView.text = "$name $surname"
         usernameTextView.text = username
         numberTextView.text = number
+        val drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
 
+        setSupportActionBar(toolbar)
+        supportActionBar!!.title = "Admin"
         toggle  = ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.open_navigation_drawer,R.string.close_navigation_drawer)
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
@@ -62,20 +59,23 @@ class DoctorActivity : AppCompatActivity() {
         val nav_view = findViewById<NavigationView>(R.id.nav_view)
         nav_view.setNavigationItemSelectedListener {
             when(it.itemId){
+                R.id.doctorRegister->{
+                    goToDoctorRegister()
+                }
+                R.id.patients->{
+                    goToPatients(name,surname,number,username)
+                }
+                R.id.doctors->{
+                    goToDoctors(name, surname, number, username)
+                }
                 R.id.appointment->{
-                    goToAppointment(username,name,surname,number)
-                }
-                R.id.patientRecord->{
-                    goToPatientRecord(username,name,surname,number)
-                }
-                R.id.patientViewRecord->{
-                    goToView(username,name,surname,number)
-                }
-                R.id.report->{
-                    saveReport()
+                    goToAppointment(name,surname,number,username)
                 }
                 R.id.logout->{
                     goToLogin()
+                }
+                R.id.report-> {
+                    saveReport()
                 }
             }
             true
@@ -102,122 +102,109 @@ class DoctorActivity : AppCompatActivity() {
         val wordDoc = XWPFDocument()
         val excelDoc = HSSFWorkbook()
         val mFilename = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(System.currentTimeMillis())
-        val mFilePath = "Record-$mFilename.pdf"
-        val wordFilePath = "Record-$mFilename.docx"
-        val excelFilePath = "Record-$mFilename.xls"
-        val txtFilePath = "Record-$mFilename.txt"
+        val mFilePath = "Appointment-$mFilename.pdf"
+        val wordFilePath = "Appointment-$mFilename.docx"
+        val excelFilePath = "Appointment-$mFilename.xls"
+        val txtFilePath = "Appointment-$mFilename.txt"
         var data: String
         try{
             //word
             val para = wordDoc.createParagraph()
             val paraRun = para.createRun()
-            var wordCount = 1
             //pdf
             PdfWriter.getInstance(mDoc, FileOutputStream(File(applicationContext.getExternalFilesDir("data"),mFilePath)))
             mDoc.open()
             //excel
             var excelNumber = 1
-            val excelSheet = excelDoc.createSheet("Doctor Report")
+            val excelSheet = excelDoc.createSheet("Hospital Report")
             val excelRow = excelSheet.createRow(0)
             val excelCell0 = excelRow.createCell(0)
-            excelCell0.setCellValue("Record Number")
+            excelCell0.setCellValue("Appointment Number")
 
             val excelCell1 = excelRow.createCell(1)
             excelCell1.setCellValue("Patient ID")
 
             val excelCell2 = excelRow.createCell(2)
-            excelCell2.setCellValue("Disease")
+            excelCell2.setCellValue("Doctor ID")
 
             val excelCell3 = excelRow.createCell(3)
-            excelCell3.setCellValue("allergy")
+            excelCell3.setCellValue("Date")
 
             val excelCell4 = excelRow.createCell(4)
-            excelCell4.setCellValue("treatment")
+            excelCell4.setCellValue("Availability")
 
             val excelCell5 = excelRow.createCell(5)
-            excelCell5.setCellValue("medical number")
+            excelCell5.setCellValue("Appointment Description")
 
-            val excelCell6 = excelRow.createCell(6)
-            excelCell6.setCellValue("medication")
 
-            paraRun.setText("Patients' Records ",0)
             val sb = StringBuilder()
-            database = FirebaseDatabase.getInstance().getReference("PatientRecord")
+            database = FirebaseDatabase.getInstance().getReference("Appointment")
             database.get().addOnSuccessListener {
-                val sb = StringBuilder()
+
                 for(i in it.children){
 
-                    val username = i.child("username").value.toString()
-                    val illness = i.child("illness").value.toString()
-                    val allergy = i.child("allergy").value.toString()
-                    val treatment = i.child("treatment").value.toString()
-                    val medication = i.child("medication").value.toString()
-                    val medicalNo = i.child("medicalNo").value.toString()
+
+
+                    val availability = i.child("availability").value.toString()
+                    val date = i.child("date").value.toString()
+                    val disease = i.child("disease").value.toString()
+                    var doctor : String = i.child("doctor").value.toString()
+                    if(doctor.contentEquals("null")){
+                        doctor = "Not yet assigned"
+                    }
+                    val patient = i.child("patient").value.toString()
                     val id = i.key.toString()
 
-                    sb.append("Record No: $id\nUsername: $username\nIllness: $illness\nAllergy: $allergy\nTreatment: $treatment\nmedicalNo: $medicalNo\nmedication: $medication\n_____________________________\n")
-
-                    paraRun.fontSize = 10
-                    paraRun.setText("Record No: $id",wordCount++)
-                    paraRun.setText("Username: $username",wordCount++)
-                    paraRun.setText("Illness: $illness",wordCount++)
-                    paraRun.setText("Allergy: $allergy",wordCount++)
-                    paraRun.setText("Treatment: $treatment",wordCount++)
-                    paraRun.setText("medicalNo: $medicalNo",wordCount++)
-                    paraRun.setText("medication: $medication",wordCount++)
-                    paraRun.setText("\n_____________________________",wordCount++)
-
+                    sb.append("Appointment number: $id\nPatient: $patient\nDoctor: $doctor\nAppointment Time: $availability\nDate: $date\nAppointment Description: $disease\n_____________________________\n")
                     val excelRow = excelSheet.createRow(excelNumber++)
                     val excelCell0 = excelRow.createCell(0)
                     excelCell0.setCellValue(id)
 
                     val excelCell1 = excelRow.createCell(1)
-                    excelCell1.setCellValue(username)
+                    excelCell1.setCellValue(patient)
 
                     val excelCell2 = excelRow.createCell(2)
-                    excelCell2.setCellValue(illness)
+                    excelCell2.setCellValue(doctor)
 
                     val excelCell3 = excelRow.createCell(3)
-                    excelCell3.setCellValue(allergy)
+                    excelCell3.setCellValue(date)
 
                     val excelCell4 = excelRow.createCell(4)
-                    excelCell4.setCellValue(treatment)
+                    excelCell4.setCellValue(availability)
 
                     val excelCell5 = excelRow.createCell(5)
-                    excelCell5.setCellValue(medicalNo)
+                    excelCell5.setCellValue(disease)
 
-                    val excelCell6 = excelRow.createCell(6)
-                    excelCell6.setCellValue(medication)
+                    //var appointment = Appointment(patient,doctor,disease,availability,date)
                 }
                 data = sb.toString()
 
                 //create pdf
                 mDoc.addAuthor(name + surname)
-                mDoc.add(Paragraph("Patients' Records \n\n$data"))
+                mDoc.add(Paragraph(data))
                 mDoc.close()
 
                 //create word
-
-
+                paraRun.setText(data)
+                paraRun.fontSize = 16
                 wordDoc.write(FileOutputStream(File(applicationContext.getExternalFilesDir("data"),wordFilePath)))
                 wordDoc.close()
 
                 //create txt file
                 val writeIntoFile = FileOutputStream(File(applicationContext.getExternalFilesDir("data"),txtFilePath))
-                writeIntoFile.write("Patients' Records \n\n$data".toByteArray())
+                writeIntoFile.write(data.toByteArray())
 
                 //create excel
                 excelDoc.write(FileOutputStream(File(applicationContext.getExternalFilesDir("data"),excelFilePath)))
                 excelDoc.close()
-                Toast.makeText(this,"${applicationContext.getExternalFilesDir("data")} + $mFilename.pdf is successfully save",
-                    Toast.LENGTH_SHORT).show()
+                Toast.makeText(this,"${applicationContext.getExternalFilesDir("data")} + $mFilename.pdf is successfully save",Toast.LENGTH_SHORT).show()
             }.addOnFailureListener {
                 Toast.makeText(this,"failed", Toast.LENGTH_LONG).show()
             }
 
 
         }catch (ex : Exception){
-            Toast.makeText(this,ex.toString(), Toast.LENGTH_SHORT).show()
+            Toast.makeText(this,ex.toString(),Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -235,29 +222,40 @@ class DoctorActivity : AppCompatActivity() {
         }
     }
 
-    private fun goToView(username: String, name: String, surname: String, number: String) {
-        val intent = Intent(this,RecordActivity::class.java)
-        intent.putExtra("username",username)
+    private fun goToDoctors(name: String?, surname: String?, number: String?, username: String?) {
+        val intent = Intent(this,AdminDoctorActivity::class.java)
         intent.putExtra("name",name)
         intent.putExtra("surname",surname)
         intent.putExtra("number",number)
+        intent.putExtra("userName",username)
         startActivity(intent)
     }
 
-    private fun goToPatientRecord(username: String, name: String, surname: String, number: String) {
-        val intent = Intent(this,PatientRecordActivity::class.java)
-        intent.putExtra("username",username)
+    private fun goToPatients(name: String?, surname: String?, number: String?, username: String?) {
+        val intent = Intent(this,AdminPatientsActivity::class.java)
         intent.putExtra("name",name)
         intent.putExtra("surname",surname)
         intent.putExtra("number",number)
+        intent.putExtra("userName",username)
         startActivity(intent)
     }
-    private fun goToAppointment(username: String, name: String, surname: String, number: String) {
-        val intent = Intent(this,DoctorAppointmentsActivity::class.java)
-        intent.putExtra("username",username)
+
+    private fun goToDoctorRegister() {
+        val intent = Intent(this,DoctorRegisterActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun goToAppointment(
+        name: String?,
+        surname: String?,
+        number: String?,
+        username: String?
+    ) {
+        val intent = Intent(this,AdminAppointmentActivity::class.java)
         intent.putExtra("name",name)
         intent.putExtra("surname",surname)
         intent.putExtra("number",number)
+        intent.putExtra("userName",username)
         startActivity(intent)
     }
 

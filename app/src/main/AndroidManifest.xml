@@ -11,61 +11,61 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HospitalManagement">
         <activity
-            android:name="za.ac.tuthospitalmanagementsystem.PostponeActivity"
+            android:name="za.ac.hospitalmanagementsystem.PostponeActivity"
             android:exported="false" />
         <activity
-            android:name="za.ac.tuthospitalmanagementsystem.AppointmentActivity"
+            android:name="za.ac.hospitalmanagementsystem.AppointmentActivity"
             android:exported="false" />
         <activity
-            android:name="za.ac.tuthospitalmanagementsystem.EditDoctorActivity"
+            android:name="za.ac.hospitalmanagementsystem.EditDoctorActivity"
             android:exported="false" />
         <activity
-            android:name="za.ac.tuthospitalmanagementsystem.EditAppointmentActivity"
+            android:name="za.ac.hospitalmanagementsystem.EditAppointmentActivity"
             android:exported="false" />
         <activity
-            android:name="za.ac.tuthospitalmanagementsystem.EditRecordActivity"
+            android:name="za.ac.hospitalmanagementsystem.EditRecordActivity"
             android:exported="false" />
         <activity
-            android:name="za.ac.tuthospitalmanagementsystem.RecordActivity"
+            android:name="za.ac.hospitalmanagementsystem.RecordActivity"
             android:exported="false" />
         <activity
-            android:name="za.ac.tuthospitalmanagementsystem.DoctorAppointmentsActivity"
+            android:name="za.ac.hospitalmanagementsystem.DoctorAppointmentsActivity"
             android:exported="false" />
         <activity
-            android:name="za.ac.tuthospitalmanagementsystem.PatientRecordActivity"
+            android:name="za.ac.hospitalmanagementsystem.PatientRecordActivity"
             android:exported="false" />
         <activity
-            android:name="za.ac.tuthospitalmanagementsystem.AdminActivity"
+            android:name="za.ac.hospitalmanagementsystem.AdminActivity"
             android:exported="false" />
         <activity
-            android:name="za.ac.tuthospitalmanagementsystem.AdminAppointmentActivity"
+            android:name="za.ac.hospitalmanagementsystem.AdminAppointmentActivity"
             android:exported="false" />
         <activity
-            android:name="za.ac.tuthospitalmanagementsystem.AdminDoctorActivity"
+            android:name="za.ac.hospitalmanagementsystem.AdminDoctorActivity"
             android:exported="false" />
         <activity
-            android:name="za.ac.tuthospitalmanagementsystem.AdminPatientsActivity"
+            android:name="za.ac.hospitalmanagementsystem.AdminPatientsActivity"
             android:exported="false" />
         <activity
-            android:name="za.ac.tuthospitalmanagementsystem.DoctorActivity"
+            android:name="za.ac.hospitalmanagementsystem.DoctorActivity"
             android:exported="false" />
         <activity
-            android:name="za.ac.tuthospitalmanagementsystem.SetAppointmentActivity"
+            android:name="za.ac.hospitalmanagementsystem.SetAppointmentActivity"
             android:exported="false" />
         <activity
-            android:name="za.ac.tuthospitalmanagementsystem.ProfileActivity"
+            android:name="za.ac.hospitalmanagementsystem.ProfileActivity"
             android:exported="false" />
         <activity
-            android:name="za.ac.tuthospitalmanagementsystem.PatientActivity"
+            android:name="za.ac.hospitalmanagementsystem.PatientActivity"
             android:exported="false" />
         <activity
-            android:name="za.ac.tuthospitalmanagementsystem.DoctorRegisterActivity"
+            android:name="za.ac.hospitalmanagementsystem.DoctorRegisterActivity"
             android:exported="false" />
         <activity
-            android:name="za.ac.tuthospitalmanagementsystem.PatientRegisterActivity"
+            android:name="za.ac.hospitalmanagementsystem.PatientRegisterActivity"
             android:exported="false" />
         <activity
-            android:name="za.ac.tuthospitalmanagementsystem.LoginActivity"
+            android:name="za.ac.hospitalmanagementsystem.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

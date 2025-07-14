@@ -1,4 +1,4 @@
-package za.ac.tuthospitalmanagementsystem
+package za.ac.hospitalmanagementsystem
 
 import android.content.Intent
 import android.net.Uri

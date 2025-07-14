@@ -1,5 +1,5 @@
 
-package za.ac.tuthospitalmanagementsystem
+package za.ac.hospitalmanagementsystem
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity

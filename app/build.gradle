@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace "za.ac.tuthospitalmanagementsystem"
+    namespace "za.ac.hospitalmanagementsystem"
     compileSdk 33
 
     defaultConfig {

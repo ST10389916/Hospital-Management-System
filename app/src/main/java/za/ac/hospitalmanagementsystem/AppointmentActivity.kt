@@ -1,4 +1,4 @@
-package za.ac.tuthospitalmanagementsystem
+package za.ac.hospitalmanagementsystem
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
