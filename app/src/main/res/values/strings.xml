@@ -1,0 +1,68 @@
+<resources>
+    <string name="app_name">HospitalManagement</string>
+    <string name="open_navigation_drawer">open navigation drawer</string>
+    <string name="close_navigation_drawer">close navigation drawer</string>
+    <string name="todo">todo</string>
+    <string name="welcome_to_our_service">Welcome to our public hospital service</string>
+    <string name="selectP">Select patient</string>
+    <string name="set_appointment">Set Appointment</string>
+    <string name="patient_record">Insert Record</string>
+    <string name="appointment">Appointment</string>
+    <string name="view_patient_record">View Patient Record</string>
+    <string name="logout">Logout</string>
+    <string name="no_record">No record</string>
+    <string name="enter_record_no">Enter Record No</string>
+    <string name="edit">Edit</string>
+    <string name="submit">Submit</string>
+    <string name="enter_treatment">enter Treatment</string>
+    <string name="enter_medication">Enter Medication</string>
+    <string name="enter_patient_s_medical_no">Enter patient\'s Medical No</string>
+    <string name="enter_patient_s_illness">Enter patient\'s illness</string>
+    <string name="enter_patient_s_username">Enter patient\'s username</string>
+    <string name="patient_record_edit">Patient Record Edit</string>
+    <string name="delete">delete</string>
+    <string name="select">Please select doctor</string>
+    <string name="patient_name">Patient name</string>
+    <string name="_0717783902">0717783902</string>
+    <string name="patient_username">Patient username</string>
+    <string name="click_here_to_retrieve_data">click here to retrieve data</string>
+    <string name="update_an_appointment">UPDATE AN APPOINTMENT</string>
+    <string name="appointment_number">Appointment number</string>
+    <string name="date">Date</string>
+    <string name="save_report">Save Report</string>
+    <string name="doctor">Doctor</string>
+    <string name="patients">Patients</string>
+    <string name="register_doctor">Register Doctor</string>
+    <string name="click_to_go_to_health_twitter_account">Click to go to Health Twitter Account</string>
+    <string-array name="timeframe">
+        <item>Select the time you are available</item>
+        <item>6 - 12</item>
+        <item>9 - 15</item>
+        <item>12 - 18</item>
+        <item>15 - 22</item>
+        <item>18 - 00</item>
+    </string-array>
+    <string-array name="departments">
+        <item>Select your department</item>
+        <item>Dentistry</item>
+        <item>Surgery</item>
+        <item>Gynecologist</item>
+        <item>Dermatologist</item>
+    </string-array>
+    <string-array name="specialization">
+        <item>Select your specialization</item>
+        <item>General</item>
+        <item>Trainee</item>
+        <item>Analyst</item>
+    </string-array>
+    <string-array name="gender">
+        <item>Select gender</item>
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+    <string-array name="allergy">
+        <item>Patient has allergy</item>
+        <item>Yes</item>
+        <item>No</item>
+    </string-array>
+</resources>

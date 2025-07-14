@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.HospitalManagement">
+        <activity
+            android:name="za.ac.tuthospitalmanagementsystem.PostponeActivity"
+            android:exported="false" />
+        <activity
+            android:name="za.ac.tuthospitalmanagementsystem.AppointmentActivity"
+            android:exported="false" />
+        <activity
+            android:name="za.ac.tuthospitalmanagementsystem.EditDoctorActivity"
+            android:exported="false" />
+        <activity
+            android:name="za.ac.tuthospitalmanagementsystem.EditAppointmentActivity"
+            android:exported="false" />
+        <activity
+            android:name="za.ac.tuthospitalmanagementsystem.EditRecordActivity"
+            android:exported="false" />
+        <activity
+            android:name="za.ac.tuthospitalmanagementsystem.RecordActivity"
+            android:exported="false" />
+        <activity
+            android:name="za.ac.tuthospitalmanagementsystem.DoctorAppointmentsActivity"
+            android:exported="false" />
+        <activity
+            android:name="za.ac.tuthospitalmanagementsystem.PatientRecordActivity"
+            android:exported="false" />
+        <activity
+            android:name="za.ac.tuthospitalmanagementsystem.AdminActivity"
+            android:exported="false" />
+        <activity
+            android:name="za.ac.tuthospitalmanagementsystem.AdminAppointmentActivity"
+            android:exported="false" />
+        <activity
+            android:name="za.ac.tuthospitalmanagementsystem.AdminDoctorActivity"
+            android:exported="false" />
+        <activity
+            android:name="za.ac.tuthospitalmanagementsystem.AdminPatientsActivity"
+            android:exported="false" />
+        <activity
+            android:name="za.ac.tuthospitalmanagementsystem.DoctorActivity"
+            android:exported="false" />
+        <activity
+            android:name="za.ac.tuthospitalmanagementsystem.SetAppointmentActivity"
+            android:exported="false" />
+        <activity
+            android:name="za.ac.tuthospitalmanagementsystem.ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name="za.ac.tuthospitalmanagementsystem.PatientActivity"
+            android:exported="false" />
+        <activity
+            android:name="za.ac.tuthospitalmanagementsystem.DoctorRegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name="za.ac.tuthospitalmanagementsystem.PatientRegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name="za.ac.tuthospitalmanagementsystem.LoginActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

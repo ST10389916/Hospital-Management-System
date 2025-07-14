@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "460668246191",
+    "firebase_url": "https://care-plus-6656b-default-rtdb.firebaseio.com",
+    "project_id": "care-plus-6656b",
+    "storage_bucket": "care-plus-6656b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:460668246191:android:b0b598075dcc1307be9c5a",
+        "android_client_info": {
+          "package_name": "za.ac.tuthospitalmanagementsystem"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnizf8-U0a7M4jvZbyBRpLBGxJZ4N4xaI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
