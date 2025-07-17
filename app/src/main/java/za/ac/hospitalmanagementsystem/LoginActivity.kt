@@ -25,8 +25,8 @@ class LoginActivity : AppCompatActivity() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
 
         setSupportActionBar(toolbar)
-        supportActionBar!!.title = "Login"
-        val textViewAccount= findViewById<TextView>(R.id.textViewAccount)
+        supportActionBar!!.title = ""
+
         val textViewRegister = findViewById<TextView>(R.id.textViewRegister)
         val loginButton = findViewById<Button>(R.id.buttonLogin)
         radioPatient = findViewById(R.id.radioPatient)
@@ -36,9 +36,7 @@ class LoginActivity : AppCompatActivity() {
             goToRegisterPage()
         }
 
-        textViewAccount.setOnClickListener {
-            goToTwitterAccount()
-        }
+
         loginButton.setOnClickListener {
             val userName : String = findViewById<TextInputEditText>(R.id.textInputEditTextEmail).text.toString().trim()
             if(userName.isNotEmpty()){
@@ -49,15 +47,7 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun goToTwitterAccount() {
-        val url = "https://twitter.com/HealthZA?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor"
 
-        val openURL = Intent(Intent.ACTION_VIEW)
-
-        openURL.data = Uri.parse(url)
-
-        startActivity(openURL)
-    }
 
     private fun goToPatient(userName : String) {
 

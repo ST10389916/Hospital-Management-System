@@ -3,7 +3,7 @@
     <string name="open_navigation_drawer">open navigation drawer</string>
     <string name="close_navigation_drawer">close navigation drawer</string>
     <string name="todo">todo</string>
-    <string name="welcome_to_our_service">Welcome to our public hospital service</string>
+    <string name="welcome_to_our_service">Welcome to Care Plus</string>
     <string name="selectP">Select patient</string>
     <string name="set_appointment">Set Appointment</string>
     <string name="patient_record">Insert Record</string>

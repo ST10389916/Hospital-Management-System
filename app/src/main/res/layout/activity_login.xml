@@ -19,10 +19,21 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#Be5025"
+            android:background="@color/white"
             android:elevation="4dp"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Dark" />
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
+            >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Login"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            android:letterSpacing="0.02"/>
+        </androidx.appcompat.widget.Toolbar>
 
         <!-- Header Section -->
         <LinearLayout
@@ -38,18 +49,9 @@
                 android:layout_height="150dp"
                 android:layout_gravity="center"
                 android:contentDescription="@string/todo"
-                android:src="@drawable/doctor" />
+                android:src="@drawable/care_plus" />
 
-            <TextView
-                android:id="@+id/textViewAccount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center"
-                android:text="@string/click_to_go_to_health_twitter_account"
-                android:textColor="#546E7A"
-                android:textSize="16sp"
-                tools:textAlignment="center" />
+
 
             <TextView
                 android:id="@+id/textViewTitle"
