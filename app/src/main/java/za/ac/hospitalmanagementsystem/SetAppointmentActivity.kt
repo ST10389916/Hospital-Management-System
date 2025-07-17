@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
@@ -19,44 +20,89 @@ class SetAppointmentActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_set_appointment)
+
+        // Set up toolbar with back button
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
-
         setSupportActionBar(toolbar)
-        supportActionBar!!.title = "Set Appointment"
-        val buttonBack = findViewById<Button>(R.id.buttonBack)
-        val buttonSubmit = findViewById<Button>(R.id.buttonSubmit)
-        val editTextDate  = findViewById<EditText>(R.id.editTextDate)
-        val username : String = intent.getStringExtra("userName").toString()
-        val name= intent.getStringExtra("name")
-        val surname= intent.getStringExtra("surname")
-        val number= intent.getStringExtra("number")
+        supportActionBar?.apply {
+            title = " "
+//            setDisplayHomeAsUpEnabled(true)
+//            setDisplayShowHomeEnabled(true)
+        }
 
-        val myCalender = Calendar.getInstance()
-        val datePicker = DatePickerDialog.OnDateSetListener{ _, year, month, dayOfMonth ->
-            myCalender.set(Calendar.YEAR,year)
-            myCalender.set(Calendar.MONTH,month)
-            myCalender.set(Calendar.DAY_OF_MONTH,dayOfMonth)
-            updateMyCalender(myCalender)
+        // Get user data from intent
+        val username = intent.getStringExtra("userName").toString()
+        val name = intent.getStringExtra("name")
+        val surname = intent.getStringExtra("surname")
+        val number = intent.getStringExtra("number")
+
+        // Initialize views
+        val editTextDate = findViewById<EditText>(R.id.editTextDate)
+        val buttonSubmit = findViewById<Button>(R.id.buttonSubmit)
+        val spinnerAvailability = findViewById<Spinner>(R.id.spinnerAvailability)
+
+        // Setup spinner with time frames
+        val timeFrames = resources.getStringArray(R.array.timeframe)
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, timeFrames)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerAvailability.adapter = adapter
+
+        // Date picker setup
+        val myCalendar = Calendar.getInstance()
+        val datePicker = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+            myCalendar.set(Calendar.YEAR, year)
+            myCalendar.set(Calendar.MONTH, month)
+            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+            updateCalendar(myCalendar)
         }
 
         editTextDate.setOnClickListener {
-            DatePickerDialog(this,datePicker,myCalender.get(Calendar.YEAR),myCalender.get(Calendar.MONTH),myCalender.get(Calendar.DAY_OF_MONTH)).show()
-        }
-        buttonSubmit.setOnClickListener {
-            val randomValues = Random.nextInt(1000)
-            submitAppointment(randomValues,username,name,surname,number)
+            DatePickerDialog(this, datePicker,
+                myCalendar.get(Calendar.YEAR),
+                myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)
+            ).show()
         }
 
-        buttonBack.setOnClickListener {
-            goToPatientActivity(username,name,surname,number)
+        buttonSubmit.setOnClickListener {
+            if (validateInputs()) {
+                val randomValues = Random.nextInt(1000)
+                submitAppointment(randomValues, username, name, surname, number)
+            }
+        }
+
+        toolbar.setNavigationOnClickListener {
+            onBackPressed()
         }
     }
 
-    private fun updateMyCalender(myCalender: Calendar) {
-        val editTextDate  = findViewById<EditText>(R.id.editTextDate)
-        val dFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    private fun validateInputs(): Boolean {
+        val disease = findViewById<EditText>(R.id.editTextDisease).text.toString()
+        val date = findViewById<EditText>(R.id.editTextDate).text.toString()
 
-        editTextDate.setText(dFormat.format(myCalender.time))
+        if (disease.isEmpty()) {
+            findViewById<EditText>(R.id.editTextDisease).error = "Please enter appointment description"
+            return false
+        }
+
+        if (date.isEmpty()) {
+            findViewById<EditText>(R.id.editTextDate).error = "Please select a date"
+            return false
+        }
+
+        return true
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+
+    private fun updateCalendar(calendar: Calendar) {
+        val editTextDate = findViewById<EditText>(R.id.editTextDate)
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        editTextDate.setText(dateFormat.format(calendar.time))
+        editTextDate.error = null
     }
 
     private fun submitAppointment(
@@ -66,36 +112,22 @@ class SetAppointmentActivity : AppCompatActivity() {
         surname: String?,
         number: String?
     ) {
-        val editTextDisease :String = findViewById<EditText>(R.id.editTextDisease).text.toString()
-        val spinnerAvailability :String = findViewById<Spinner>(R.id.spinnerAvailability).selectedItem.toString()
-        val editTextDate : String = findViewById<EditText>(R.id.editTextDate).text.toString()
+        val disease = findViewById<EditText>(R.id.editTextDisease).text.toString()
+        val availability = findViewById<Spinner>(R.id.spinnerAvailability).selectedItem.toString()
+        val date = findViewById<EditText>(R.id.editTextDate).text.toString()
 
-        val database  = Firebase.database
-        val myref = database.getReference("Appointment").child(appointmentNumber.toString())
+        Firebase.database.reference
+            .child("Appointment")
+            .child(appointmentNumber.toString())
+            .setValue(Appointment(username, "null", disease, availability, date))
 
-        myref.setValue(Appointment(username, doctor="null",editTextDisease,spinnerAvailability,editTextDate))
-
-        val intent = Intent(this,PatientActivity::class.java)
-        intent.putExtra("userName",username)
-        intent.putExtra("userName",username)
-        intent.putExtra("name",name)
-        intent.putExtra("surname",surname)
-        intent.putExtra("number",number)
+        val intent = Intent(this, PatientActivity::class.java).apply {
+            putExtra("userName", username)
+            putExtra("name", name)
+            putExtra("surname", surname)
+            putExtra("number", number)
+        }
         startActivity(intent)
-    }
-
-    private fun goToPatientActivity(
-        username: String,
-        name: String?,
-        surname: String?,
-        number: String?
-    ) {
-        val intent = Intent(this,PatientActivity::class.java)
-        intent.putExtra("userName",username)
-        intent.putExtra("userName",username)
-        intent.putExtra("name",name)
-        intent.putExtra("surname",surname)
-        intent.putExtra("number",number)
-        startActivity(intent)
+        finish()
     }
 }

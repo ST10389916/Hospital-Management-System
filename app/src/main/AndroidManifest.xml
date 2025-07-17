@@ -65,6 +65,12 @@
             android:name="za.ac.hospitalmanagementsystem.PatientRegisterActivity"
             android:exported="false" />
         <activity
+            android:name="za.ac.hospitalmanagementsystem.NewsPatientActivity"
+            android:exported="false" />
+        <activity
+            android:name="za.ac.hospitalmanagementsystem.BaseActivity"
+            android:exported="false" />
+        <activity
             android:name="za.ac.hospitalmanagementsystem.LoginActivity"
             android:exported="true">
             <intent-filter>

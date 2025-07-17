@@ -1,103 +1,191 @@
 package za.ac.hospitalmanagementsystem
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.appcompat.widget.Toolbar
-import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.drawerlayout.widget.DrawerLayout
-import com.google.android.material.navigation.NavigationView
+import android.widget.Toast
+import androidx.cardview.widget.CardView
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import java.lang.StringBuilder
+import java.text.SimpleDateFormat
 import java.util.*
 
-class PatientActivity : AppCompatActivity() {
-    private lateinit var toggle : ActionBarDrawerToggle
-    private lateinit var database : DatabaseReference
+class PatientActivity : BaseActivity() {
+
+    private lateinit var database: DatabaseReference
+    private lateinit var currentUsername: String
+    private lateinit var appointmentsContainer: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_patient)
-        val drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        val button_setAppointment = findViewById<Button>(R.id.buttonSetAppointment)
 
-        setSupportActionBar(toolbar)
-        supportActionBar!!.title = "Patient"
-        val name= intent.getStringExtra("name")
-        val surname= intent.getStringExtra("surname")
-        val number= intent.getStringExtra("number")
-        val username : String= intent.getStringExtra("userName").toString()
+        // Initialize time displays
+        val currentDate = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(Date())
+        val currentTime = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date())
 
-        val nameTextView = findViewById<TextView>(R.id.textViewName)
-        val usernameTextView = findViewById<TextView>(R.id.textViewUsername)
-        val numberTextView = findViewById<TextView>(R.id.textViewUserNumber)
-        val dateTextView = findViewById<TextView>(R.id.textViewTime)
+        findViewById<TextView>(R.id.textViewTime).text = currentDate
+        findViewById<TextView>(R.id.textViewLoginTime).text = "Time logged in: $currentTime"
 
-        val date = Date()
-        dateTextView.text = (date).toString()
+        // Initialize toolbar
+        setSupportActionBar(findViewById(R.id.toolbar))
+        supportActionBar?.setDisplayShowTitleEnabled(false)
 
-        nameTextView.text ="$name $surname"
-        usernameTextView.text = username
-        numberTextView.text = number
-
-        button_setAppointment.setOnClickListener {
-            goToSetAppointment(username,name,surname,number)
+        // Get user data from intent
+        val extras = intent?.extras ?: run {
+            Toast.makeText(this, "User data missing!", Toast.LENGTH_LONG).show()
+            finish()
+            return
         }
-        toggle  = ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.open_navigation_drawer,R.string.close_navigation_drawer)
-        drawerLayout.addDrawerListener(toggle)
-        toggle.syncState()
 
+        currentUsername = extras.getString("userName", "")
+        val fullName = "${extras.getString("name", "")} ${extras.getString("surname", "")}"
+        val phoneNumber = extras.getString("number", "")
 
-        val nav_view = findViewById<NavigationView>(R.id.nav_view)
-        nav_view.setNavigationItemSelectedListener {
-            when(it.itemId){
-                R.id.appointment-> {
-                    goToAppointment(username)
+        // Set user information
+        findViewById<TextView>(R.id.textViewName).text = fullName
+        findViewById<TextView>(R.id.textViewUsername).text = currentUsername
+        findViewById<TextView>(R.id.textViewUserNumber).text = phoneNumber
+
+        // Initialize appointments container
+        appointmentsContainer = findViewById(R.id.appointmentsContainer)
+
+        // Load appointments
+        loadAppointments()
+
+        // Set click listeners
+        findViewById<Button>(R.id.buttonSetAppointment).setOnClickListener {
+            navigateToSetAppointment()
+        }
+
+        highlightTab(R.id.nav_appointment)
+        setupBottomNavigation(R.id.nav_appointment)
+    }
+
+    private fun loadAppointments() {
+        database = FirebaseDatabase.getInstance().getReference("Appointment")
+        database.get().addOnSuccessListener { snapshot ->
+            appointmentsContainer.removeAllViews() // Clear existing views
+
+            if (!snapshot.exists()) {
+                val noAppointmentsText = TextView(this).apply {
+                    text = "No appointments found"
+                    setTextColor(resources.getColor(android.R.color.darker_gray))
+                    textSize = 16f
+                    setPadding(0, 16, 0, 16)
                 }
-                R.id.logout-> {
-                    goToLogin()
+                appointmentsContainer.addView(noAppointmentsText)
+                return@addOnSuccessListener
+            }
+
+            for (appointment in snapshot.children) {
+                val availability = appointment.child("availability").value.toString()
+                val date = appointment.child("date").value.toString()
+                val disease = appointment.child("disease").value.toString()
+                var doctor = appointment.child("doctor").value.toString()
+                if (doctor == "null") {
+                    doctor = "Not yet assigned"
                 }
-                R.id.profile-> {
-                    goToProfile(username,name,surname,number)
+                val patient = appointment.child("patient").value.toString()
+                val id = appointment.key
+
+                // Only show appointments for current user
+                if (patient == currentUsername) {
+                    val appointmentCard = createAppointmentCard(
+                        date = date,
+                        doctor = doctor,
+                        disease = disease,
+                        status = availability
+                    )
+                    appointmentsContainer.addView(appointmentCard)
                 }
             }
-            true
+        }.addOnFailureListener {
+            Toast.makeText(this, "Failed to load appointments", Toast.LENGTH_LONG).show()
         }
     }
 
-    private fun goToSetAppointment(
-        username: String,
-        name: String?,
-        surname: String?,
-        number: String?
-    ) {
-        val intent = Intent(this,SetAppointmentActivity::class.java)
-        intent.putExtra("userName",username)
-        intent.putExtra("name",name)
-        intent.putExtra("surname",surname)
-        intent.putExtra("number",number)
-        startActivity(intent)
+    private fun createAppointmentCard(date: String, doctor: String, disease: String, status: String): CardView {
+        return CardView(this).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(0, 0, 0, 16)
+            }
+            radius = 12f
+            elevation = 4f
+            setContentPadding(16, 16, 16, 16)
+
+            val cardContent = LinearLayout(this@PatientActivity).apply {
+                orientation = LinearLayout.VERTICAL
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+            }
+
+            // Add fields to the card
+            arrayOf(
+                "Date: $date",
+                "Doctor: $doctor",
+                "Condition: $disease",
+                "Status: $status"
+            ).forEach { text ->
+                val textView = TextView(this@PatientActivity).apply {
+                    layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    ).apply {
+                        setMargins(0, 4, 0, 4)
+                    }
+                    setTextColor(resources.getColor(android.R.color.black))
+                    textSize = 16f
+                    this.text = text
+                }
+                cardContent.addView(textView)
+            }
+
+            addView(cardContent)
+        }
     }
 
-    private fun goToAppointment(username: String) {
-        val intent = Intent(this,AppointmentActivity::class.java)
-        intent.putExtra("userName",username)
-        startActivity(intent)
+    private fun setupBottomNavigation() {
+        val navItems = listOf(
+            R.id.nav_news to NewsPatientActivity::class.java,
+            R.id.nav_appointment to AppointmentActivity::class.java,
+            R.id.nav_profile to ProfileActivity::class.java,
+            R.id.nav_logout to LoginActivity::class.java
+        )
+
+        navItems.forEach { (id, activityClass) ->
+            findViewById<View>(id)?.setOnClickListener {
+                if (id == R.id.nav_logout) {
+                    startActivity(Intent(this, activityClass))
+                    finish()
+                } else if (id != R.id.nav_appointment) {
+                    highlightTab(id)
+                    startActivity(Intent(this, activityClass).apply {
+                        putExtras(intent?.extras ?: Bundle())
+                    })
+                }
+            }
+        }
     }
 
-    private fun goToLogin() {
-        val intent = Intent(this,LoginActivity::class.java)
-        startActivity(intent)
+    private fun navigateToSetAppointment() {
+        startActivity(Intent(this, SetAppointmentActivity::class.java).apply {
+            putExtras(intent?.extras ?: Bundle())
+        })
     }
 
-    private fun goToProfile(username: String, name: String?, surname: String?, number: String?) {
-        val intent = Intent(this,ProfileActivity::class.java)
-        intent.putExtra("userName",username)
-        intent.putExtra("name",name)
-        intent.putExtra("surname",surname)
-        intent.putExtra("number",number)
-        startActivity(intent)
+    override fun onResume() {
+        super.onResume()
+        highlightTab(R.id.nav_appointment)
+        loadAppointments() // Refresh appointments when returning to activity
     }
 }

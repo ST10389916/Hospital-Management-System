@@ -5,6 +5,29 @@
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+<!--    <color name="black">#FF000000</color>-->
+<!--    <color name="white">#FFFFFFFF</color>-->
+    <color name="primary_color">#Be5025</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+
+
+    <!-- New colors for professional theme -->
+    <color name="primaryDark">#BE5025</color>  <!-- Matching your toolbar color -->
+    <color name="textSecondary">#757575</color>  <!-- Material Grey 600 -->
+    <color name="cardStroke">#E0E0E0</color>  <!-- Light grey border -->
+
+
+<!--    <color name="primary_color">#Be5025</color>-->
+<!--    <color name="white">#FFFFFF</color>-->
+<!--    <color name="black">#000000</color>-->
+<!--    <color name="primaryDark">#8a3b1a</color>-->
+<!--    <color name="textSecondary">#757575</color>-->
+
+
+    <!-- For light theme -->
+    <color name="card_stroke">#1A000000</color> <!-- 10% opacity black -->
+
+    <!-- For dark theme (add to res/values-night/colors.xml) -->
+<!--    <color name="card_stroke">#1AFFFFFF</color> &lt;!&ndash; 10% opacity white &ndash;&gt;-->
 </resources>

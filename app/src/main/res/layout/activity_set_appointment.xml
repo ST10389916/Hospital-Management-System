@@ -4,82 +4,155 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".AppointmentActivity">
+    android:background="@color/white"
+    android:fillViewport="true"
+    tools:context=".SetAppointmentActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingHorizontal="16dp">
+
+        <!-- Toolbar -->
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#Be5025"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/white"
             android:elevation="4dp"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Dark" />
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:titleTextColor="@color/white"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
+            >
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="MAKE AN APPOINTMENT"
-            android:textAlignment="center"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:textSize="20sp"/>
-
-        <EditText
-            android:id="@+id/editTextDisease"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:textSize="20sp"
-            android:inputType="textPersonName"
-            android:hint="Appointment description"/>
-
-        <Spinner
-            android:id="@+id/spinnerAvailability"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:gravity="center"
+            android:text="Appointment"
+            android:textColor="@android:color/black"
             android:textSize="20sp"
-            android:popupBackground="@color/white"
-            android:entries="@array/timeframe"
-            android:layout_marginStart="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="20dp"/>
-        <EditText
-            android:id="@+id/editTextDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:textSize="20sp"
-            android:inputType="date"
-            android:hint="Date"/>
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="0.02"
+            android:gravity="center"/>
+
+        </androidx.appcompat.widget.Toolbar>
+        <!-- Header Section -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="40dp">
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingVertical="16dp">
 
-            <Button
-                android:id="@+id/buttonBack"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginEnd="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_background"
-                android:text="Back" />
+            <TextView
+                android:id="@+id/textViewTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="Make An Appointment"
+                android:textColor="#546E7A"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
+        <!-- Appointment Form -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Appointment Description -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                app:boxBackgroundColor="@android:color/transparent"
+                app:boxStrokeColor="#546E7A"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextDisease"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_profile"
+                    android:drawablePadding="10dp"
+                    android:drawableTint="#546E7A"
+                    android:hint="Appointment description"
+                    android:inputType="textCapSentences|textMultiLine"
+                    android:maxLines="3"
+                    android:minHeight="52dp"
+                    android:textColor="#000"
+                    android:textColorHint="#546E7A"
+                    android:textSize="16sp"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Availability -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:hint="Availability"
+                app:boxBackgroundColor="@android:color/transparent"
+                app:boxStrokeColor="#546E7A"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                <Spinner
+                    android:id="@+id/spinnerAvailability"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@android:color/transparent"
+                    android:minHeight="52dp"
+                    android:paddingStart="12dp"
+                    android:drawablePadding="10dp"
+                    android:popupBackground="@color/white" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Date -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:boxBackgroundColor="@android:color/transparent"
+                app:boxStrokeColor="#546E7A"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_calendar"
+                    android:drawablePadding="10dp"
+                    android:drawableTint="#546E7A"
+                    android:hint="Select date"
+                    android:inputType="none"
+                    android:focusable="false"
+                    android:clickable="true"
+                    android:minHeight="52dp"
+                    android:textColor="#000"
+                    android:textColorHint="#546E7A"
+                    android:textSize="16sp"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Submit Button -->
             <Button
                 android:id="@+id/buttonSubmit"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="10dp"
-                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/button_background"
-                android:text="Submit" />
+                android:text="Submit"
+                android:textAllCaps="false"
+                android:textColor="#fff"
+                android:textSize="18sp" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

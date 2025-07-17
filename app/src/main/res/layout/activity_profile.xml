@@ -1,86 +1,213 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:background="@color/white"
     tools:context=".ProfileActivity">
 
+    <!-- Toolbar -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#Be5025"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/white"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Dark" />
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:layout_width="95dp"
-        android:layout_height="95dp"
-        android:src="@drawable/ic_profile"
-        android:layout_gravity="center"
-        android:layout_margin="10dp"/>
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Dark">
 
     <TextView
-        android:id="@+id/textViewUsername"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:gravity="center"
-        android:text="username"
-        android:textAllCaps="true"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:layout_gravity="center"
+        android:text="Update Profile"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-medium"
+        android:letterSpacing="0.02"
+        android:gravity="center"/>
 
-    <EditText
-        android:id="@+id/editTextViewName"
-        android:hint="name"
-        android:layout_margin="20dp"
-        android:textSize="18sp"
-        android:gravity="center"
-        android:textColor="@color/black"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+</androidx.appcompat.widget.Toolbar>
 
-    <EditText
-        android:id="@+id/editTextViewSurname"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:gravity="center"
-        android:hint="surname"
-        android:textColor="@color/black"
-        android:textSize="18sp" />
 
-    <EditText
-        android:id="@+id/editTextViewNumber"
-        android:layout_margin="20dp"
-        android:textSize="18sp"
-        android:hint="phone number"
-        android:gravity="center"
-        android:inputType="number"
-        android:textAllCaps="true"
-        android:textColor="@color/black"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
 
-    <EditText
-        android:id="@+id/editTextViewAddress"
-        android:layout_margin="20dp"
-        android:textSize="18sp"
-        android:hint="Address"
-        android:gravity="center"
-        android:textColor="@color/black"
-        android:inputType="text"
+    <!-- Main Content -->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    <Button
-        android:id="@+id/buttonEdit"
-        android:background="@drawable/button_background"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Edit Your Profile" />
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
+        android:fillViewport="true"
+        android:paddingHorizontal="16dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Profile Picture Section -->
+            <RelativeLayout
+                android:id="@+id/profile_picture_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingVertical="16dp">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profile_image"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="10dp"
+                    android:src="@drawable/ic_profile" />
+
+                <TextView
+                    android:id="@+id/textViewUsername"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/profile_image"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:text="username"
+                    android:textAllCaps="true"
+                    android:textColor="#546E7A"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <!-- Profile Form -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/profile_picture_section"
+                android:layout_marginTop="16dp">
+
+                <!-- Name -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/nameInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    app:boxBackgroundColor="@android:color/transparent"
+                    app:boxStrokeColor="#546E7A"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextViewName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_profile"
+                        android:drawablePadding="10dp"
+                        android:drawableTint="#546E7A"
+                        android:hint="Name"
+                        android:inputType="textCapWords"
+                        android:minHeight="52dp"
+                        android:textColor="#000"
+                        android:textColorHint="#546E7A"
+                        android:textSize="16sp"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Surname -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/surnameInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/nameInputLayout"
+                    android:layout_marginBottom="8dp"
+                    app:boxBackgroundColor="@android:color/transparent"
+                    app:boxStrokeColor="#546E7A"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextViewSurname"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_profile"
+                        android:drawablePadding="10dp"
+                        android:drawableTint="#546E7A"
+                        android:hint="Surname"
+                        android:inputType="textCapWords"
+                        android:minHeight="52dp"
+                        android:textColor="#000"
+                        android:textColorHint="#546E7A"
+                        android:textSize="16sp"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Phone Number -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/phoneInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/surnameInputLayout"
+                    android:layout_marginBottom="8dp"
+                    app:boxBackgroundColor="@android:color/transparent"
+                    app:boxStrokeColor="#546E7A"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextViewNumber"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_phone"
+                        android:drawablePadding="10dp"
+                        android:drawableTint="#546E7A"
+                        android:hint="Phone Number"
+                        android:inputType="phone"
+                        android:minHeight="52dp"
+                        android:textColor="#000"
+                        android:textColorHint="#546E7A"
+                        android:textSize="16sp"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Address -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/addressInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/phoneInputLayout"
+                    android:layout_marginBottom="16dp"
+                    app:boxBackgroundColor="@android:color/transparent"
+                    app:boxStrokeColor="#546E7A"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextViewAddress"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_home"
+                        android:drawablePadding="10dp"
+                        android:drawableTint="#546E7A"
+                        android:hint="Address"
+                        android:inputType="textPostalAddress"
+                        android:minHeight="52dp"
+                        android:textColor="#000"
+                        android:textColorHint="#546E7A"
+                        android:textSize="16sp"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Edit Button -->
+                <Button
+                    android:id="@+id/buttonEdit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/addressInputLayout"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/button_background"
+                    android:text="Edit Your Profile"
+                    android:textAllCaps="false"
+                    android:textColor="#fff"
+                    android:textSize="18sp" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </ScrollView>
+
+    <include layout="@layout/bottom_navigation"/>
+</RelativeLayout>

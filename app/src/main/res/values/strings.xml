@@ -34,14 +34,6 @@
     <string name="patients">Patients</string>
     <string name="register_doctor">Register Doctor</string>
     <string name="click_to_go_to_health_twitter_account">Click to go to Health Twitter Account</string>
-    <string-array name="timeframe">
-        <item>Select the time you are available</item>
-        <item>6 - 12</item>
-        <item>9 - 15</item>
-        <item>12 - 18</item>
-        <item>15 - 22</item>
-        <item>18 - 00</item>
-    </string-array>
     <string-array name="departments">
         <item>Select your department</item>
         <item>Dentistry</item>
@@ -64,5 +56,11 @@
         <item>Patient has allergy</item>
         <item>Yes</item>
         <item>No</item>
+    </string-array>
+
+    <string-array name="timeframe">
+        <item>Morning (8am-12pm)</item>
+        <item>Afternoon (12pm-4pm)</item>
+        <item>Evening (4pm-8pm)</item>
     </string-array>
 </resources>
