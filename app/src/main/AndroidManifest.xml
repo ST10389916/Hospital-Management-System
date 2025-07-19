@@ -61,6 +61,13 @@
         <activity
             android:name="za.ac.hospitalmanagementsystem.DoctorRegisterActivity"
             android:exported="false" />
+
+        <activity
+            android:name="za.ac.hospitalmanagementsystem.DoctorProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name="za.ac.hospitalmanagementsystem.EditDoctorProfileActivity"
+            android:exported="false" />
         <activity
             android:name="za.ac.hospitalmanagementsystem.PatientRegisterActivity"
             android:exported="false" />

@@ -11,6 +11,8 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
 
+    <color name="colorInactiveTab">#3725BE</color>
+
 
     <!-- New colors for professional theme -->
     <color name="primaryDark">#BE5025</color>  <!-- Matching your toolbar color -->

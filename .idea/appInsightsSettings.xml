@@ -8,7 +8,7 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="za.ac.tuthospitalmanagementsystem" />
+                  <option name="appId" value="za.ac.hospitalmanagementsystem" />
                   <option name="mobileSdkAppId" value="1:460668246191:android:b0b598075dcc1307be9c5a" />
                   <option name="projectId" value="care-plus-6656b" />
                   <option name="projectNumber" value="460668246191" />
