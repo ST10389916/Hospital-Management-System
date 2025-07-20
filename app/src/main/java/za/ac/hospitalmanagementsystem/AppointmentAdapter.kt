@@ -37,7 +37,7 @@ class AppointmentAdapter(
         holder.tvTime.text = "Time: ${appointment.availability}"
 
         holder.btnPostpone.setOnClickListener {
-            appointment.appointmentNo?.let { appointmentNo ->
+            appointment.appointmentNo.let { appointmentNo ->
                 onPostponeClick(appointmentNo)
             }
         }
