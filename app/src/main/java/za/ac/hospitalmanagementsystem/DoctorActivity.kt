@@ -29,7 +29,7 @@ class DoctorActivity : DoctorBaseActivity() {
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-        supportActionBar?.title = "Doctor"
+        supportActionBar?.title = " "
 
         // Initialize views
         val nameTextView = findViewById<TextView>(R.id.textViewName)

@@ -27,6 +27,10 @@
 <!--    <color name="textSecondary">#757575</color>-->
 
 
+    <!-- Add these if they don't exist -->
+    <color name="light_gray_background">#F5F5F5</color>
+    <color name="text_secondary">#757575</color>
+
     <!-- For light theme -->
     <color name="card_stroke">#1A000000</color> <!-- 10% opacity black -->
 

@@ -27,7 +27,7 @@ class PatientRecordActivity : AppCompatActivity() {
         val doctorUsername: String= intent.getStringExtra("username").toString()
 
         setSupportActionBar(toolbar)
-        supportActionBar!!.title = "Patient Record"
+        supportActionBar!!.title = " "
         val buttonSubmit = findViewById<Button>(R.id.buttonSubmit)
 
         doSomething()
@@ -80,5 +80,9 @@ class PatientRecordActivity : AppCompatActivity() {
         intent.putExtra("surname",surname)
         intent.putExtra("number",number)
         startActivity(intent)
+    }
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 }

@@ -22,7 +22,7 @@ class DoctorAppointmentsActivity : DoctorBaseActivity() {
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-        supportActionBar?.title = "Appointments"
+        supportActionBar?.title = ""
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         // Initialize views with correct IDs
