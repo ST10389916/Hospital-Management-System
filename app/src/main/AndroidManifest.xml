@@ -38,6 +38,9 @@
             android:name="za.ac.hospitalmanagementsystem.AdminActivity"
             android:exported="false" />
         <activity
+            android:name="za.ac.hospitalmanagementsystem.admin.AdminAISupportActivity"
+            android:exported="false" />
+        <activity
             android:name="za.ac.hospitalmanagementsystem.AdminAppointmentActivity"
             android:exported="false" />
         <activity
@@ -77,6 +80,7 @@
         <activity
             android:name="za.ac.hospitalmanagementsystem.BaseActivity"
             android:exported="false" />
+
         <activity
             android:name="za.ac.hospitalmanagementsystem.LoginActivity"
             android:exported="true">

@@ -9,9 +9,10 @@ import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import za.ac.hospitalmanagementsystem.admin.AdminBaseActivity
 import java.lang.StringBuilder
 
-class AdminPatientsActivity : AppCompatActivity() {
+class AdminPatientsActivity : AdminBaseActivity() {
     private lateinit var database : DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
