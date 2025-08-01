@@ -10,8 +10,9 @@
         <item name="android:paddingBottom">8dp</item>
     </style>
 
-    <!-- Color definitions -->
-    <color name="colorPrimary">#BE5025</color>
-    <color name="colorPrimaryDark">#8A3A1B</color>
-    <color name="colorAccent">#03DAC5</color>
+    <style name="Theme.HospitalManagementSystem" parent="Theme.MaterialComponents.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
 </resources>

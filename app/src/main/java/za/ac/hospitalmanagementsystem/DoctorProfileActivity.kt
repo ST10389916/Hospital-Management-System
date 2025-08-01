@@ -2,72 +2,71 @@ package za.ac.hospitalmanagementsystem
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.widget.Toolbar
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.textfield.TextInputEditText
+import com.google.firebase.database.*
 
 class DoctorProfileActivity : DoctorBaseActivity() {
 
     private lateinit var database: DatabaseReference
-    private lateinit var tvName: TextView
-    private lateinit var tvSurname: TextView
-    private lateinit var tvEmail: TextView
-    private lateinit var tvPhone: TextView
-    private lateinit var tvSpecialization: TextView
-    private lateinit var btnEditProfile: Button
+
+    private lateinit var etName: TextInputEditText
+    private lateinit var etSurname: TextInputEditText
+    private lateinit var etEmail: TextInputEditText
+    private lateinit var etPhone: TextInputEditText
+    private lateinit var etSpecialization: TextInputEditText
+    private lateinit var btnEditProfile: MaterialButton
+
+    // Remove the username property here! Use the base class's protected username directly
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_doctor_profile)
 
-        // Initialize views
-        tvName = findViewById(R.id.tvName)
-        tvSurname = findViewById(R.id.tvSurname)
-        tvEmail = findViewById(R.id.tvEmail)
-        tvPhone = findViewById(R.id.tvPhone)
-        tvSpecialization = findViewById(R.id.tvSpecialization)
+        etName = findViewById(R.id.etName)
+        etSurname = findViewById(R.id.etSurname)
+        etEmail = findViewById(R.id.etEmail)
+        etPhone = findViewById(R.id.etPhone)
+        etSpecialization = findViewById(R.id.etSpecialization)
         btnEditProfile = findViewById(R.id.btnEditProfile)
 
-        // Setup toolbar
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.title = "My Profile"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        // Load profile data
         loadProfileData()
 
-        // Set up button click listener
         btnEditProfile.setOnClickListener {
-            goToEditProfile()
+            saveProfileData()
         }
 
-        // Setup bottom navigation
         setupBottomNavigation(R.id.nav_profile)
     }
 
     override fun onResume() {
         super.onResume()
-        loadProfileData() // Refresh data when returning from EditProfile
+        loadProfileData()
         highlightTab(R.id.nav_profile)
     }
 
     private fun loadProfileData() {
+        if (username.isBlank()) {
+            Toast.makeText(this, "No user logged in", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         database = FirebaseDatabase.getInstance().getReference("Doctors").child(username)
         database.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
-                    tvName.text = snapshot.child("name").value.toString()
-                    tvSurname.text = snapshot.child("surname").value.toString()
-                    tvEmail.text = snapshot.child("email").value.toString()
-                    tvPhone.text = snapshot.child("number").value.toString()
-                    tvSpecialization.text = snapshot.child("specialization").value.toString()
+                    etName.setText(snapshot.child("name").value?.toString() ?: "")
+                    etSurname.setText(snapshot.child("surname").value?.toString() ?: "")
+                    etEmail.setText(snapshot.child("email").value?.toString() ?: "")
+                    etPhone.setText(snapshot.child("number").value?.toString() ?: "")
+                    etSpecialization.setText(snapshot.child("specialization").value?.toString() ?: "")
                 }
             }
 
@@ -77,13 +76,34 @@ class DoctorProfileActivity : DoctorBaseActivity() {
         })
     }
 
-    private fun goToEditProfile() {
-        startActivity(Intent(this, EditDoctorProfileActivity::class.java).apply {
-            putExtra("username", username)
-            putExtra("name", name)
-            putExtra("surname", surname)
-            putExtra("number", number)
-        })
+    private fun saveProfileData() {
+        val name = etName.text.toString().trim()
+        val surname = etSurname.text.toString().trim()
+        val email = etEmail.text.toString().trim()
+        val phone = etPhone.text.toString().trim()
+        val specialization = etSpecialization.text.toString().trim()
+
+        if (name.isEmpty() || surname.isEmpty() || email.isEmpty()) {
+            Toast.makeText(this, "Name, surname and email are required.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val updates = mapOf<String, Any>(
+            "name" to name,
+            "surname" to surname,
+            "email" to email,
+            "number" to phone,
+            "specialization" to specialization
+        )
+
+        database = FirebaseDatabase.getInstance().getReference("Doctors").child(username)
+        database.updateChildren(updates).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Failed to update profile", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -91,3 +111,4 @@ class DoctorProfileActivity : DoctorBaseActivity() {
         return true
     }
 }
+

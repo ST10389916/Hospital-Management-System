@@ -6,60 +6,91 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
+    android:background="@android:color/white"
     tools:context=".admin.AdminAISupportActivity">
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Ask AI Assistant"
         android:textSize="24sp"
         android:textStyle="bold"
+        android:textColor="@android:color/black"
         android:gravity="center"
         android:layout_marginBottom="24dp"/>
 
-    <EditText
-        android:id="@+id/questionInput"
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Type your question here..."
-        android:inputType="textMultiLine"
-        android:minHeight="100dp"
-        android:gravity="top|start"
-        android:padding="12dp"
-        android:background="@drawable/edit_text_border"/>
+        android:layout_marginBottom="8dp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:boxStrokeColor="@color/colorPrimary"
+        app:hintTextColor="@color/colorPrimary">
 
-    <Button
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/questionInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Type your question here..."
+            android:inputType="textMultiLine"
+            android:minHeight="100dp"
+            android:gravity="top|start"
+            android:padding="12dp"
+            android:textColor="@android:color/black"
+            android:textColorHint="@android:color/darker_gray"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/askButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Ask AI"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="24dp"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+        style="@style/Widget.MaterialComponents.Button"
+        android:backgroundTint="@color/colorPrimary"
+        app:icon="@drawable/ic_ai"
+        app:iconGravity="textStart"
+        app:iconPadding="8dp"
+        app:iconTint="@android:color/white"/>
 
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:indeterminateTint="@color/colorPrimary"
         android:visibility="gone"/>
 
-    <TextView
-        android:id="@+id/responseText"
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:padding="12dp"
-        android:background="@drawable/text_view_border"
-        android:textColor="@android:color/black"
-        android:textSize="16sp"/>
+        app:cardElevation="4dp"
+        app:cardCornerRadius="8dp"
+        android:layout_marginTop="8dp">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:padding="12dp">
+
+            <TextView
+                android:id="@+id/responseText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"/>
+        </ScrollView>
+    </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="@color/white"
+        android:background="@android:color/white"
         app:itemIconTint="@drawable/nav_item_color_state"
         app:itemTextColor="@drawable/nav_item_color_state"
         app:menu="@menu/admin_bottom_nav_menu"

@@ -108,4 +108,8 @@ class EditAppointmentActivity : AppCompatActivity() {
         intent.putExtra("userName",username)
         startActivity(intent)
     }
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
 }

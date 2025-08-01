@@ -3,85 +3,124 @@ package za.ac.hospitalmanagementsystem
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Gravity
+import android.view.View
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.card.MaterialCardView
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import za.ac.hospitalmanagementsystem.admin.AdminBaseActivity
 import java.lang.StringBuilder
 
 class AdminPatientsActivity : AdminBaseActivity() {
-    private lateinit var database : DatabaseReference
+    private lateinit var database: DatabaseReference
+    private lateinit var patientsContainer: LinearLayout
+    private lateinit var patientsListContainer: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_admin_patients)
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
 
+        val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-        supportActionBar!!.title = "Patients"
-        loadingPatient()
 
-        val name = intent.getStringExtra("name").toString()
-        val surname= intent.getStringExtra("surname").toString()
-        val number= intent.getStringExtra("number").toString()
-        val username= intent.getStringExtra("userName").toString()
-        val buttonDelete = findViewById<Button>(R.id.buttonDelete)
-        val buttonClose = findViewById<Button>(R.id.buttonClose)
-        buttonClose.setOnClickListener {
-            goToAdmin(name, surname, number, username)
-        }
-        buttonDelete.setOnClickListener {
-            val editTextPatientId = findViewById<TextView>(R.id.editTextDoctorId)
+        // Enable back button
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
 
-            val patientEmail : String = editTextPatientId.text.toString()
-            if(patientEmail.isNotEmpty()){
-                deleteRecord(patientEmail)
-                editTextPatientId.text = ""
-            }else{
-                Toast.makeText(this,"Enter patient ID",Toast.LENGTH_LONG).show()
-            }
-            loadingPatient()
+        toolbar.setNavigationOnClickListener {
+            onBackPressed()
         }
+
+        patientsContainer = findViewById(R.id.patientsContainer)
+        patientsListContainer = findViewById(R.id.patientsListContainer)
+        loadPatients()
     }
 
-    private fun goToAdmin(name: String?, surname: String?, number: String?, username: String?) {
-        intent = Intent(this,AdminActivity::class.java)
-        intent.putExtra("name",name)
-        intent.putExtra("surname",surname)
-        intent.putExtra("number",number)
-        intent.putExtra("userName",username)
-        startActivity(intent)
-    }
-
-    private fun loadingPatient() {
-        val textViewAppointments = findViewById<TextView>(R.id.textViewDoctors)
-
+    private fun loadPatients() {
         database = FirebaseDatabase.getInstance().getReference("Patient")
-        database.get().addOnSuccessListener {
-            val sb = StringBuilder()
-            for(i in it.children){
+        database.get().addOnSuccessListener { snapshot ->
+            patientsListContainer.removeAllViews() // Clear existing views
 
-                val name = i.child("name").value
-                val surname = i.child("surname").value
-                val gender = i.child("gender").value
-                val id = i.key
-
-                sb.append("Username $id\nName $name\nSurname $surname\nGender $gender\n_____________________________\n")
+            if (!snapshot.exists()) {
+                // Show "No patients" message
+                val noPatientsText = TextView(this).apply {
+                    text = "No patients found"
+                    setTextAppearance(android.R.style.TextAppearance_Medium)
+                    gravity = Gravity.CENTER
+                    setPadding(0, 32.dpToPx(), 0, 0)
+                }
+                patientsListContainer.addView(noPatientsText)
+                return@addOnSuccessListener
             }
-            textViewAppointments.text = sb
+
+            for (patientSnapshot in snapshot.children) {
+                val patientCard = layoutInflater.inflate(
+                    R.layout.item_patient_card,
+                    patientsListContainer,
+                    false
+                ) as MaterialCardView
+
+                val name = patientSnapshot.child("name").value.toString()
+                val surname = patientSnapshot.child("surname").value.toString()
+                val gender = patientSnapshot.child("gender").value.toString()
+                val username = patientSnapshot.key.toString()
+
+                patientCard.findViewById<TextView>(R.id.textPatientName).text =
+                    "$name $surname"
+                patientCard.findViewById<TextView>(R.id.textPatientUsername).text =
+                    "Username: $username"
+                patientCard.findViewById<TextView>(R.id.textPatientGender).text =
+                    "Gender: $gender"
+
+                patientCard.findViewById<MaterialButton>(R.id.buttonClose).setOnClickListener {
+                    goToAdmin(
+                        name,
+                        surname,
+                        "", // number if available
+                        username
+                    )
+                }
+
+                patientCard.findViewById<MaterialButton>(R.id.buttonDelete).setOnClickListener {
+                    deletePatient(username, patientCard)
+                }
+
+                patientsListContainer.addView(patientCard)
+            }
         }.addOnFailureListener {
-            Toast.makeText(this,"failed", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Failed to load patients", Toast.LENGTH_LONG).show()
         }
     }
 
-    private fun deleteRecord(patientEmail: String) {
-
-        database = FirebaseDatabase.getInstance().getReference("Patient").child(patientEmail)
-        database.removeValue().addOnSuccessListener {
-            Toast.makeText(this,"Patient removed",Toast.LENGTH_LONG).show()
+    private fun deletePatient(username: String, cardView: View) {
+        database.child(username).removeValue().addOnSuccessListener {
+            patientsListContainer.removeView(cardView)
+            Toast.makeText(this, "Patient deleted", Toast.LENGTH_SHORT).show()
+        }.addOnFailureListener {
+            Toast.makeText(this, "Delete failed", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun Int.dpToPx(): Int = (this * resources.displayMetrics.density).toInt()
+
+    private fun goToAdmin(name: String, surname: String, number: String, username: String) {
+        startActivity(Intent(this, AdminActivity::class.java).apply {
+            putExtra("name", name)
+            putExtra("surname", surname)
+            putExtra("number", number)
+            putExtra("userName", username)
+        })
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
     }
 }

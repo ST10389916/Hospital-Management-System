@@ -24,6 +24,7 @@
             app:title="Postpone Appointment"
             app:titleTextColor="@android:color/white"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -31,8 +32,7 @@
                 android:text="Postpone Appointment"
                 android:textColor="@color/white"
                 android:textSize="20sp"
-                android:textStyle="bold"/>
-
+                android:textStyle="bold" />
         </com.google.android.material.appbar.MaterialToolbar>
 
         <!-- Main content card -->
@@ -58,7 +58,7 @@
                     android:textColor="@color/primary_color"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    android:layout_marginBottom="16dp"/>
+                    android:layout_marginBottom="16dp" />
 
                 <!-- Appointment number -->
                 <TextView
@@ -67,7 +67,7 @@
                     android:text="Appointment Reference:"
                     android:textColor="@color/text_secondary"
                     android:textSize="14sp"
-                    android:layout_marginBottom="4dp"/>
+                    android:layout_marginBottom="4dp" />
 
                 <TextView
                     android:id="@+id/appointmentNumber"
@@ -78,7 +78,7 @@
                     android:textStyle="bold"
                     android:textColor="@color/primary_color"
                     android:textSize="18sp"
-                    android:layout_marginBottom="24dp"/>
+                    android:layout_marginBottom="24dp" />
 
                 <!-- Timeframe selection -->
                 <TextView
@@ -88,7 +88,7 @@
                     android:text="Select New Timeframe:"
                     android:textColor="@color/text_secondary"
                     android:textSize="14sp"
-                    android:layout_marginBottom="4dp"/>
+                    android:layout_marginBottom="4dp" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/timeframeInputLayout"
@@ -108,7 +108,7 @@
                         android:textSize="16sp"
                         android:background="@null"
                         android:dropDownHeight="wrap_content"
-                        android:dropDownWidth="match_parent"/>
+                        android:dropDownWidth="match_parent" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Date selection -->
@@ -118,7 +118,7 @@
                     android:text="Select New Date:"
                     android:textColor="@color/text_secondary"
                     android:textSize="14sp"
-                    android:layout_marginBottom="4dp"/>
+                    android:layout_marginBottom="4dp" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/dateInputLayout"
@@ -127,7 +127,7 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_marginBottom="24dp">
 
-                    <EditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editTextDate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -135,7 +135,7 @@
                         android:textSize="16sp"
                         android:hint="MM/DD/YYYY"
                         android:focusable="false"
-                        android:clickable="true"/>
+                        android:clickable="true" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Submit button -->
@@ -151,8 +151,9 @@
                     app:icon="@drawable/ic_schedule"
                     app:iconGravity="textStart"
                     app:iconPadding="8dp"
-                    app:iconTint="@color/white"
-                    app:backgroundTint="@color/primary_color"/>
+                    app:iconTint="@android:color/white"
+                    app:backgroundTint="@color/teal_700" />  <!-- Changed button color to Material Blue -->
+
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -164,6 +165,6 @@
             android:textAlignment="center"
             android:textColor="@color/text_secondary"
             android:textSize="12sp"
-            android:layout_margin="16dp"/>
+            android:layout_margin="16dp" />
     </LinearLayout>
 </ScrollView>

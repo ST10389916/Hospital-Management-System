@@ -1,103 +1,126 @@
 package za.ac.hospitalmanagementsystem
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
+import android.view.Gravity
+import android.view.View
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.widget.Toolbar
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.card.MaterialCardView
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import za.ac.hospitalmanagementsystem.admin.AdminBaseActivity
-import java.lang.StringBuilder
 
 class AdminAppointmentActivity : AdminBaseActivity() {
 
-    private lateinit var database : DatabaseReference
+    private lateinit var database: DatabaseReference
+    private lateinit var appointmentsContainer: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_admin_appointment)
-        val buttonEdit = findViewById<Button>(R.id.buttonEdit)
-        val buttonDelete = findViewById<Button>(R.id.buttonDelete)
 
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        val name= intent.getStringExtra("name")
-        val surname= intent.getStringExtra("surname")
-        val number= intent.getStringExtra("number")
-        val username= intent.getStringExtra("userName")
+        val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
-        supportActionBar!!.title = "Appointments"
-        loadAppointment()
-        buttonEdit.setOnClickListener {
-            goToEditAppointment(name,surname,number,username)
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+
+        toolbar.setNavigationOnClickListener {
+            onBackPressed()
         }
-        buttonDelete.setOnClickListener {
-            deleteAppointment()
-        }
-        loadAppointment()
+
+        appointmentsContainer = findViewById(R.id.appointmentsContainer)
+        loadAppointments()
     }
 
-    private fun deleteAppointment() {
-        val editTextAppointmentNo = findViewById<EditText>(R.id.editTextAppointmentNo).text.toString()
-        database = FirebaseDatabase.getInstance().getReference("Appointment").child(editTextAppointmentNo)
-        database.removeValue().addOnSuccessListener {
-            Toast.makeText(this,"Appointment removed",Toast.LENGTH_LONG).show()
-        }
-    }
-
-    private fun goToEditAppointment(
-        name: String?,
-        surname: String?,
-        number: String?,
-        username: String?
-    ) {
-        val editTextAppointmentNo = findViewById<EditText>(R.id.editTextAppointmentNo).text.toString()
-        database = FirebaseDatabase.getInstance().getReference("Appointment").child(editTextAppointmentNo)
-        database.get().addOnSuccessListener {
-            if(it.exists()){
-
-                intent = Intent(this,EditAppointmentActivity::class.java)
-                intent.putExtra("name",name)
-                intent.putExtra("surname",surname)
-                intent.putExtra("number",number)
-                intent.putExtra("userName",username)
-
-                intent.putExtra("appointmentNo",editTextAppointmentNo)
-                startActivity(intent)
-            }else{
-                Toast.makeText(this,"Appointment Number does not exist",Toast.LENGTH_LONG).show()
-            }
-        }.addOnFailureListener {
-            Toast.makeText(this,"failed", Toast.LENGTH_LONG).show()
-        }
-    }
-
-    private fun loadAppointment() {
-        val textViewAppointments = findViewById<TextView>(R.id.textViewAppointments)
-
+    private fun loadAppointments() {
         database = FirebaseDatabase.getInstance().getReference("Appointment")
-        database.get().addOnSuccessListener {
-            val sb = StringBuilder()
-            for(i in it.children){
+        database.get().addOnSuccessListener { snapshot ->
+            appointmentsContainer.removeAllViews()
 
-                val availability = i.child("availability").value
-                val date = i.child("date").value
-                val disease = i.child("disease").value
-                var doctor : String = i.child("doctor").value.toString()
-                if(doctor.contentEquals("null")){
-                    doctor = "Not yet assigned"
+            if (!snapshot.exists()) {
+                val noAppointmentsText = TextView(this).apply {
+                    text = "No appointments found"
+                    setTextAppearance(android.R.style.TextAppearance_Medium)
+                    gravity = Gravity.CENTER
+                    setPadding(0, 32.dpToPx(), 0, 0)
                 }
-                val patient = i.child("patient").value
-                val id = i.key
-
-                sb.append("Appointment number: $id\nPatient: $patient\nDoctor: $doctor\nAvailability: $availability\nDate: $date\nDisease: $disease\n_____________________________\n")
+                appointmentsContainer.addView(noAppointmentsText)
+                return@addOnSuccessListener
             }
-            textViewAppointments.text = sb
+
+            for (appointmentSnapshot in snapshot.children) {
+                val appointmentCard = layoutInflater.inflate(
+                    R.layout.appointment_card,
+                    appointmentsContainer,
+                    false
+                ) as MaterialCardView
+
+                val appointmentNo = appointmentSnapshot.key.toString()
+                val patient = appointmentSnapshot.child("patient").value.toString()
+                var doctor = appointmentSnapshot.child("doctor").value.toString()
+                val date = appointmentSnapshot.child("date").value.toString()
+                val disease = appointmentSnapshot.child("disease").value.toString()
+                val availability = appointmentSnapshot.child("availability").value.toString()
+
+                if (doctor == "null") doctor = "Not yet assigned"
+
+                appointmentCard.findViewById<TextView>(R.id.textAppointmentNo).text =
+                    "Appointment #$appointmentNo"
+                appointmentCard.findViewById<TextView>(R.id.textPatientName).text =
+                    "Patient: $patient"
+                appointmentCard.findViewById<TextView>(R.id.textDoctorName).text =
+                    "Doctor: $doctor"
+                appointmentCard.findViewById<TextView>(R.id.textDate).text =
+                    "Date: $date"
+                appointmentCard.findViewById<TextView>(R.id.textDisease).text =
+                    "Disease: $disease"
+                appointmentCard.findViewById<TextView>(R.id.textAvailability).text =
+                    "Availability: $availability"
+
+                appointmentCard.findViewById<MaterialButton>(R.id.buttonEdit).setOnClickListener {
+                    goToEditAppointment(appointmentNo)
+                }
+
+                appointmentCard.findViewById<MaterialButton>(R.id.buttonDelete).setOnClickListener {
+                    deleteAppointment(appointmentNo, appointmentCard)
+                }
+
+                appointmentsContainer.addView(appointmentCard)
+            }
         }.addOnFailureListener {
-            Toast.makeText(this,"failed", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Failed to load appointments", Toast.LENGTH_LONG).show()
         }
+    }
+
+    private fun deleteAppointment(appointmentNo: String, cardView: View) {
+        database.child(appointmentNo).removeValue().addOnSuccessListener {
+            appointmentsContainer.removeView(cardView)
+            Toast.makeText(this, "Appointment deleted", Toast.LENGTH_SHORT).show()
+        }.addOnFailureListener {
+            Toast.makeText(this, "Delete failed", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun goToEditAppointment(appointmentNo: String) {
+        Intent(this, EditAppointmentActivity::class.java).apply {
+            putExtra("appointmentNo", appointmentNo)
+            putExtra("name", name)
+            putExtra("surname", surname)
+            putExtra("number", number)
+            putExtra("userName", username)
+            startActivity(this)
+        }
+    }
+
+    private fun Int.dpToPx(): Int = (this * resources.displayMetrics.density).toInt()
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
     }
 }

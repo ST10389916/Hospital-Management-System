@@ -4,61 +4,121 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".AdminPatientsActivity">
 
     <LinearLayout
+        android:id="@+id/patientsContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
-        <androidx.appcompat.widget.Toolbar
+
+        <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#Be5025"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
             android:elevation="4dp"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Dark" />
+            android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:title="Patients"
+            app:titleTextColor="@android:color/white" />
 
         <TextView
-            android:id="@+id/textViewDoctors"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="No patient"
-            android:textAlignment="center"
-            android:textAllCaps="true"
-            android:textSize="16sp" />
+            android:text="Patient List"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:padding="16dp"
+            android:textColor="?attr/colorPrimary"/>
 
-        <EditText
-            android:id="@+id/editTextDoctorId"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Patient Username"
-            android:inputType="text"
-            android:textAlignment="center"
-            android:textAllCaps="true"
-            android:textSize="16sp" />
         <LinearLayout
+            android:id="@+id/patientsListContainer"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp">
 
-            <Button
-                android:id="@+id/buttonClose"
-                android:layout_width="wrap_content"
+            <!-- Sample Patient Card (will be duplicated dynamically) -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_background"
-                android:text="Close" />
+                android:layout_margin="8dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp"
+                app:strokeColor="?attr/colorPrimary"
+                app:strokeWidth="1dp">
 
-            <Button
-                android:id="@+id/buttonDelete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_background"
-                android:text="Delete" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/textPatientName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="John Doe"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textPatientUsername"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Username: johndoe"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/textPatientGender"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Gender: Male"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="16sp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginVertical="8dp"
+                        android:background="?attr/colorPrimary" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/buttonClose"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:layout_weight="1"
+                            android:text="Close"
+                            app:strokeColor="?attr/colorPrimary"
+                            app:strokeWidth="1dp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/buttonDelete"
+                            style="@style/Widget.MaterialComponents.Button"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Delete"
+                            app:backgroundTint="?attr/colorPrimary" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+            <!-- End of sample card -->
+
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

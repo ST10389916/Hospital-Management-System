@@ -54,6 +54,7 @@
             android:layout_gravity="end"
             android:text="Postpone"
             android:background="@drawable/button_background"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            app:backgroundTint="@color/teal_700"/>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

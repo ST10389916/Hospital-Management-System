@@ -1,93 +1,132 @@
 package za.ac.hospitalmanagementsystem
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.textview.MaterialTextView
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import za.ac.hospitalmanagementsystem.admin.AdminBaseActivity
-import java.lang.StringBuilder
 
 class AdminDoctorActivity : AdminBaseActivity() {
-    private lateinit var database : DatabaseReference
+
+    private lateinit var database: DatabaseReference
+    private lateinit var doctorListContainer: ViewGroup
+    private lateinit var noDoctorsText: MaterialTextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_admin_doctor)
-        loadingDoctor()
 
+        // Initialize views
+        doctorListContainer = findViewById(R.id.doctorListContainer)
+        noDoctorsText = findViewById(R.id.textViewNoDoctors)
+
+        // Setup toolbar
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        val name = intent.getStringExtra("name").toString()
-        val surname= intent.getStringExtra("surname").toString()
-        val number= intent.getStringExtra("number").toString()
-        val username= intent.getStringExtra("userName").toString()
         setSupportActionBar(toolbar)
-        supportActionBar!!.title = "Doctors"
-        val buttonEdit = findViewById<Button>(R.id.buttonEdit)
-        buttonEdit.setOnClickListener {
-            goToDoctorEdit(name,surname,number,username)
-        }
-        val buttonDelete = findViewById<Button>(R.id.buttonDelete)
-
-        buttonDelete.setOnClickListener {
-            val editTextDoctorId = findViewById<EditText>(R.id.editTextDoctorId)
-
-            val doctorEmail : String = editTextDoctorId.text.toString()
-            if(doctorEmail.isNotEmpty()){
-                deleteRecord(doctorEmail)
-                editTextDoctorId.setText("")
-            }else{
-                Toast.makeText(this,"Enter patient ID",Toast.LENGTH_LONG).show()
-            }
-            loadingDoctor()
+        supportActionBar?.apply {
+            title = "Manage Doctors"
+            setDisplayHomeAsUpEnabled(true)
         }
 
+        // Initialize database reference
+        database = FirebaseDatabase.getInstance().getReference("Doctor")
+
+        // Load doctors
+        loadDoctors()
     }
 
-    private fun goToDoctorEdit(name: String, surname: String, number: String, username: String) {
-        val editTextDoctorId = findViewById<EditText>(R.id.editTextDoctorId).text.toString()
+    private fun loadDoctors() {
+        database.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                doctorListContainer.removeAllViews()
 
-        intent = Intent(this,EditDoctorActivity::class.java)
-        intent.putExtra("username",editTextDoctorId)
-        intent.putExtra("name",name)
-        intent.putExtra("surname",surname)
-        intent.putExtra("number",number)
-        intent.putExtra("userName",username)
+                if (!snapshot.exists()) {
+                    noDoctorsText.visibility = View.VISIBLE
+                    return
+                } else {
+                    noDoctorsText.visibility = View.GONE
+                }
+
+                for (doctorSnapshot in snapshot.children) {
+                    val doctor = doctorSnapshot.getValue(Doctor::class.java)
+                    doctor?.let {
+                        addDoctorCard(it, doctorSnapshot.key ?: "")
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(this@AdminDoctorActivity, "Failed to load doctors: ${error.message}", Toast.LENGTH_LONG).show()
+            }
+        })
+    }
+
+    private fun addDoctorCard(doctor: Doctor, doctorId: String) {
+        val inflater = LayoutInflater.from(this)
+        val cardView = inflater.inflate(R.layout.item_doctor_card, doctorListContainer, false)
+
+        cardView.findViewById<MaterialTextView>(R.id.textDoctorName).text = "Dr. ${doctor.name} ${doctor.surname}"
+        cardView.findViewById<MaterialTextView>(R.id.textDoctorSpecialty).text = "Specialty: ${doctor.specialization}"
+        cardView.findViewById<MaterialTextView>(R.id.textDoctorDepartment).text = "Department: ${doctor.department}"
+        cardView.findViewById<MaterialTextView>(R.id.textDoctorEmail).text = "Email: $doctorId"
+        cardView.findViewById<MaterialTextView>(R.id.textDoctorGender).text = "Gender: ${doctor.gender}"
+        cardView.findViewById<MaterialTextView>(R.id.textDoctorContact).text = "Contact: ${doctor.phoneNumber}"
+
+        cardView.findViewById<MaterialButton>(R.id.btnEditDoctor).setOnClickListener {
+            navigateToEditDoctor(doctorId, doctor)
+        }
+
+        cardView.findViewById<MaterialButton>(R.id.btnDeleteDoctor).setOnClickListener {
+            deleteDoctor(doctorId)
+        }
+
+        doctorListContainer.addView(cardView)
+    }
+
+    private fun navigateToEditDoctor(doctorId: String, doctor: Doctor) {
+        val intent = Intent(this, EditDoctorActivity::class.java).apply {
+            putExtra("doctorId", doctorId)
+            putExtra("name", doctor.name)
+            putExtra("surname", doctor.surname)
+            putExtra("number", doctor.phoneNumber)
+            putExtra("gender", doctor.gender)
+            putExtra("department", doctor.department)
+            putExtra("specialization", doctor.specialization)
+        }
         startActivity(intent)
     }
 
-    private fun loadingDoctor() {
-        val textViewDoctors = findViewById<TextView>(R.id.textViewDoctors)
-
-        database = FirebaseDatabase.getInstance().getReference("Doctor")
-        database.get().addOnSuccessListener {
-            val sb = StringBuilder()
-            for(i in it.children){
-
-                val name = i.child("name").value
-                val surname = i.child("surname").value
-                val gender = i.child("gender").value
-                val department = i.child("department").value
-                val specialization = i.child("specialization").value
-                val id = i.key
-
-                sb.append("Username $id\nName $name\nSurname $surname\nGender $gender\nspecialization $specialization\ndepartment $department\n_____________________________\n")
+    private fun deleteDoctor(doctorId: String) {
+        database.child(doctorId).removeValue()
+            .addOnSuccessListener {
+                Toast.makeText(this, "Doctor deleted successfully", Toast.LENGTH_SHORT).show()
             }
-            textViewDoctors.text = sb
-        }.addOnFailureListener {
-            Toast.makeText(this,"failed", Toast.LENGTH_LONG).show()
-        }
+            .addOnFailureListener {
+                Toast.makeText(this, "Failed to delete doctor: ${it.message}", Toast.LENGTH_SHORT).show()
+            }
     }
-    private fun deleteRecord(patientEmail: String) {
 
-        database = FirebaseDatabase.getInstance().getReference("Doctor").child(patientEmail)
-        database.removeValue().addOnSuccessListener {
-            Toast.makeText(this,"Doctor removed",Toast.LENGTH_LONG).show()
-        }
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
+
+    data class Doctor(
+        val name: String = "",
+        val surname: String = "",
+        val gender: String = "",
+        val phoneNumber: String = "",
+        val department: String = "",
+        val specialization: String = ""
+    )
 }

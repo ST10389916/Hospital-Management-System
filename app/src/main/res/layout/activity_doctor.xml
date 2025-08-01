@@ -7,15 +7,15 @@
     android:background="@color/white"
     tools:context=".DoctorActivity">
 
-    <!-- Toolbar -->
-    <androidx.appcompat.widget.Toolbar
+    <!-- Material Toolbar -->
+    <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="#F4ABA7"
         android:elevation="8dp"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+        android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.MaterialComponents.Light">
 
         <TextView
             android:layout_width="wrap_content"
@@ -24,11 +24,11 @@
             android:text="Home"
             android:textColor="@color/white"
             android:textSize="20sp"
-            android:textStyle="bold"/>
-    </androidx.appcompat.widget.Toolbar>
+            android:textStyle="bold" />
+    </com.google.android.material.appbar.MaterialToolbar>
 
-    <!-- Profile Card -->
-    <androidx.cardview.widget.CardView
+    <!-- Profile Card using MaterialCardView -->
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbar"
@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp"
-            android:gravity="center">
+            android:gravity="center_horizontal">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/user_image"
@@ -49,7 +49,7 @@
                 android:layout_height="100dp"
                 android:src="@drawable/profile_image"
                 app:civ_border_width="2dp"
-                app:civ_border_color="#F4ABA7"/>
+                app:civ_border_color="#F4ABA7" />
 
             <TextView
                 android:id="@+id/textViewName"
@@ -58,33 +58,81 @@
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:layout_marginTop="16dp"/>
+                android:layout_marginTop="16dp" />
 
-            <TextView
-                android:id="@+id/textViewUsername"
+            <!-- Username row -->
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#666"
-                android:textSize="16sp"
-                android:layout_marginTop="8dp"/>
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical">
 
-            <TextView
-                android:id="@+id/textViewUserNumber"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Username: "
+                    android:textColor="#666"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textViewUsername"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#666"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <!-- User Number row -->
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#666"
-                android:textSize="16sp"
-                android:layout_marginTop="8dp"/>
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical">
 
-            <TextView
-                android:id="@+id/textViewTime"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="User Number: "
+                    android:textColor="#666"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textViewUserNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#666"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <!-- Time row -->
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#666"
-                android:textSize="16sp"
-                android:layout_marginTop="8dp"/>
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Time: "
+                    android:textColor="#666"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textViewTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#666"
+                    android:textSize="16sp" />
+            </LinearLayout>
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
     <!-- Content Area -->
     <FrameLayout
@@ -92,9 +140,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/bottom_navigation"
-        android:layout_below="@id/toolbar"/>
+        android:layout_below="@id/toolbar" />
 
-    <!-- Bottom Navigation (unchanged) -->
+    <!-- Bottom Navigation (custom with Material ripple) -->
     <LinearLayout
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
@@ -114,15 +162,16 @@
             android:gravity="center"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
-            android:foreground="?attr/selectableItemBackground"
-            android:clickable="true">
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true">
 
             <ImageView
                 android:id="@+id/nav_icon"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_home"
-                android:tint="#666"/>
+                android:tint="#666" />
 
             <TextView
                 android:id="@+id/nav_text"
@@ -130,7 +179,7 @@
                 android:layout_height="wrap_content"
                 android:text="Home"
                 android:textSize="12sp"
-                android:textColor="#666"/>
+                android:textColor="#666" />
         </LinearLayout>
 
         <!-- Appointments Tab -->
@@ -143,15 +192,16 @@
             android:gravity="center"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
-            android:foreground="?attr/selectableItemBackground"
-            android:clickable="true">
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true">
 
             <ImageView
                 android:id="@+id/nav_icon"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_appointment"
-                android:tint="#666"/>
+                android:tint="#666" />
 
             <TextView
                 android:id="@+id/nav_text"
@@ -159,7 +209,7 @@
                 android:layout_height="wrap_content"
                 android:text="Appointments"
                 android:textSize="12sp"
-                android:textColor="#666"/>
+                android:textColor="#666" />
         </LinearLayout>
 
         <!-- Records Tab -->
@@ -172,15 +222,16 @@
             android:gravity="center"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
-            android:foreground="?attr/selectableItemBackground"
-            android:clickable="true">
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true">
 
             <ImageView
                 android:id="@+id/nav_icon"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_record"
-                android:tint="#666"/>
+                android:tint="#666" />
 
             <TextView
                 android:id="@+id/nav_text"
@@ -188,7 +239,7 @@
                 android:layout_height="wrap_content"
                 android:text="Records"
                 android:textSize="12sp"
-                android:textColor="#666"/>
+                android:textColor="#666" />
         </LinearLayout>
 
         <!-- Profile Tab -->
@@ -201,15 +252,16 @@
             android:gravity="center"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
-            android:foreground="?attr/selectableItemBackground"
-            android:clickable="true">
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true">
 
             <ImageView
                 android:id="@+id/nav_icon"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_profile"
-                android:tint="#666"/>
+                android:tint="#666" />
 
             <TextView
                 android:id="@+id/nav_text"
@@ -217,7 +269,7 @@
                 android:layout_height="wrap_content"
                 android:text="Profile"
                 android:textSize="12sp"
-                android:textColor="#666"/>
+                android:textColor="#666" />
         </LinearLayout>
 
         <!-- Logout Tab -->
@@ -230,15 +282,16 @@
             android:gravity="center"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
-            android:foreground="?attr/selectableItemBackground"
-            android:clickable="true">
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true">
 
             <ImageView
                 android:id="@+id/nav_icon"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_logout"
-                android:tint="#666"/>
+                android:tint="#666" />
 
             <TextView
                 android:id="@+id/nav_text"
@@ -246,7 +299,7 @@
                 android:layout_height="wrap_content"
                 android:text="Logout"
                 android:textSize="12sp"
-                android:textColor="#666"/>
+                android:textColor="#666" />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

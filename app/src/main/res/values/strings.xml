@@ -63,4 +63,8 @@
         <item>Afternoon (12pm-4pm)</item>
         <item>Evening (4pm-8pm)</item>
     </string-array>
+
+    <string name="select_doctor">Select Doctor</string>
+    <string name="availability">Availability</string>
+
 </resources>
