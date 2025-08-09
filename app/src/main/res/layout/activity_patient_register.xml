@@ -188,26 +188,32 @@
                     android:paddingEnd="12dp" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Gender -->
+            <!-- Gender Dropdown - Fixed Version -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:hint="Gender"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 app:boxBackgroundColor="@android:color/transparent"
                 app:boxStrokeColor="#546E7A"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                app:hintTextColor="#546E7A"
+                android:hint="Gender">
 
-                <Spinner
+                <AutoCompleteTextView
                     android:id="@+id/spinnerGender"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@android:color/transparent"
-                    android:entries="@array/gender"
+                    android:inputType="none"
                     android:minHeight="52dp"
                     android:paddingStart="12dp"
                     android:drawablePadding="10dp"
-                    android:popupBackground="@color/white" />
+                    android:drawableTint="#546E7A"
+                    android:textColor="#000"
+                    android:textColorHint="#546E7A"
+                    android:textSize="16sp"
+                    android:clickable="true"
+                    android:focusable="false"
+                    android:background="@null"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Address -->
@@ -270,7 +276,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:background="@drawable/button_background"
+                android:backgroundTint="#Be5025"
                 android:text="Register now"
                 android:textAllCaps="false"
                 android:textColor="#fff"
