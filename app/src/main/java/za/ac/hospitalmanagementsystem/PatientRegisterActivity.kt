@@ -47,7 +47,10 @@ class PatientRegisterActivity : AppCompatActivity() {
         val database  = Firebase.database
         val myref = database.getReference(rolename).child(email.text.toString())
 
-        myref.setValue(Patient(patientId.text.toString(),firstName.text.toString(),lastName.text.toString(),phoneNumber.text.toString(),address.text.toString(),gender.selectedItem.toString(),password.text.toString(),role))
+        myref.setValue(Patient(patientId.text.toString(),firstName.text.toString(),
+            lastName.text.toString(),phoneNumber.text.toString(),
+            address.text.toString(),gender.selectedItem.toString(),
+            password.text.toString(),role))
 
         goToLoginPage()
     }

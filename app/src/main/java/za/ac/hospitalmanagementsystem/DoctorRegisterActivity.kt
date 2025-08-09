@@ -51,6 +51,10 @@ class DoctorRegisterActivity : AppCompatActivity() {
         val myref = database.getReference("Doctor").child(username)
 
         myref.setValue(Doctor(name,surname,id,age,gender,phone,address,availability,department,specialization,password,role))
-
+        goToLoginPage()
+    }
+    private fun goToLoginPage() {
+        val intent = Intent(this,LoginActivity::class.java)
+        startActivity(intent)
     }
 }

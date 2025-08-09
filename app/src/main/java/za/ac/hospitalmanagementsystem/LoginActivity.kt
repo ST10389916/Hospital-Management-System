@@ -64,7 +64,7 @@ class LoginActivity : AppCompatActivity() {
                         val surname : String = it.child("surname").value.toString()
                         val number : String = it.child("number").value.toString()
 
-                        val intent = Intent(this,AdminActivity::class.java)
+                        val intent = Intent(this,AdminDoctorActivity::class.java)
                         intent.putExtra("name",name)
                         intent.putExtra("surname",surname)
                         intent.putExtra("number",number)
@@ -160,6 +160,12 @@ class LoginActivity : AppCompatActivity() {
             val intent = Intent(this, PatientRegisterActivity::class.java)
             // Pass the username to the registration activity
             intent.putExtra("role", "Admin") // Directly pass the string
+            startActivity(intent)
+        }
+        if (radioDoctor.isChecked) {
+            val intent = Intent(this, DoctorRegisterActivity::class.java)
+            // Pass the username to the registration activity
+            intent.putExtra("role", "Doctor") // Directly pass the string
             startActivity(intent)
         }
     }

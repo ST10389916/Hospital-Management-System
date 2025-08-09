@@ -67,4 +67,23 @@
     <string name="select_doctor">Select Doctor</string>
     <string name="availability">Availability</string>
 
+    <string-array name="availability_options">
+        <item>Available</item>
+        <item>Unavailable</item>
+        <item>On Leave</item>
+    </string-array>
+
+    <string-array name="department_options">
+        <item>Cardiology</item>
+        <item>Neurology</item>
+        <item>Pediatrics</item>
+        <item>Orthopedics</item>
+    </string-array>
+
+    <string-array name="specialization_options">
+        <item>General Practitioner</item>
+        <item>Surgeon</item>
+        <item>Specialist</item>
+    </string-array>
+
 </resources>

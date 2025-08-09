@@ -1,11 +1,12 @@
 package za.ac.hospitalmanagementsystem
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -27,25 +28,91 @@ class EditDoctorActivity : AppCompatActivity() {
             setDisplayShowHomeEnabled(true)
         }
 
-        // Get intent extras
-        val username = intent.getStringExtra("username") ?: ""
-        val adminName = intent.getStringExtra("name") ?: ""
-        val adminSurname = intent.getStringExtra("surname") ?: ""
-        val adminNumber = intent.getStringExtra("number") ?: ""
-        val adminUsername = intent.getStringExtra("userName") ?: ""
+        database = FirebaseDatabase.getInstance().getReference("Doctor")
 
-        // Set click listener for update button
+        val firstNameInput = findViewById<TextInputEditText>(R.id.textInputEditTextFirstName)
+        val lastNameInput = findViewById<TextInputEditText>(R.id.textInputEditTextLastName)
+        val phoneInput = findViewById<TextInputEditText>(R.id.textInputEditTextPhone)
+        val departmentInput = findViewById<MaterialAutoCompleteTextView>(R.id.spinnerDepartment)
+        val specializationInput = findViewById<MaterialAutoCompleteTextView>(R.id.spinnerSpecialization)
+        val availabilityInput = findViewById<MaterialAutoCompleteTextView>(R.id.spinnerAvailability)
+        val addressInput = findViewById<TextInputEditText>(R.id.textInputEditTextAddress)
+
+        // Setup adapters for dropdowns from string arrays
+        val availabilityAdapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_dropdown_item_1line,
+            resources.getStringArray(R.array.timeframe)
+        )
+        val departmentAdapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_dropdown_item_1line,
+            resources.getStringArray(R.array.departments)
+        )
+        val specializationAdapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_dropdown_item_1line,
+            resources.getStringArray(R.array.specialization)
+        )
+
+        availabilityInput.setAdapter(availabilityAdapter)
+        departmentInput.setAdapter(departmentAdapter)
+        specializationInput.setAdapter(specializationAdapter)
+
+        // Show dropdown on click
+        availabilityInput.setOnClickListener { availabilityInput.showDropDown() }
+        departmentInput.setOnClickListener { departmentInput.showDropDown() }
+        specializationInput.setOnClickListener { specializationInput.showDropDown() }
+
+        // Get doctorId from intent extras
+        val doctorId = intent.getStringExtra("doctorId") ?: ""
+
+        // Load doctor data from Firebase and populate fields
+        if (doctorId.isNotEmpty()) {
+            database.child(doctorId).get().addOnSuccessListener { snapshot ->
+                if (snapshot.exists()) {
+                    val doctorData = snapshot.value as Map<*, *>
+
+                    firstNameInput.setText(doctorData["name"] as? String ?: "")
+                    lastNameInput.setText(doctorData["surname"] as? String ?: "")
+                    phoneInput.setText(doctorData["phone"] as? String ?: "")
+                    departmentInput.setText(doctorData["department"] as? String ?: "", false)
+                    specializationInput.setText(doctorData["specialization"] as? String ?: "", false)
+                    availabilityInput.setText(doctorData["availability"] as? String ?: "", false)
+                    addressInput.setText(doctorData["address"] as? String ?: "")
+                } else {
+                    Toast.makeText(this, "Doctor data not found", Toast.LENGTH_SHORT).show()
+                }
+            }.addOnFailureListener {
+                Toast.makeText(this, "Failed to fetch doctor data: ${it.message}", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            Toast.makeText(this, "Doctor ID is missing", Toast.LENGTH_SHORT).show()
+        }
+
         val buttonEdit = findViewById<MaterialButton>(R.id.buttonEdit)
         buttonEdit.setOnClickListener {
             if (validateInputs()) {
-                editDoctor(username, adminName, adminSurname, adminNumber, adminUsername)
+                val updatedDoctor = mapOf(
+                    "name" to firstNameInput.text.toString(),
+                    "surname" to lastNameInput.text.toString(),
+                    "phone" to phoneInput.text.toString(),
+                    "department" to departmentInput.text.toString(),
+                    "specialization" to specializationInput.text.toString(),
+                    "availability" to availabilityInput.text.toString(),
+                    "address" to addressInput.text.toString()
+                )
+
+                database.child(doctorId).updateChildren(updatedDoctor)
+                    .addOnSuccessListener {
+                        Toast.makeText(this, "Doctor updated successfully", Toast.LENGTH_SHORT).show()
+                        finish()
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(this, "Failed to update doctor: ${it.message}", Toast.LENGTH_SHORT).show()
+                    }
             }
         }
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
-        return true
     }
 
     private fun validateInputs(): Boolean {
@@ -68,55 +135,8 @@ class EditDoctorActivity : AppCompatActivity() {
         return true
     }
 
-    private fun editDoctor(
-        username: String,
-        adminName: String,
-        adminSurname: String,
-        adminNumber: String,
-        adminUsername: String
-    ) {
-        val availability = findViewById<TextInputEditText>(R.id.spinnerAvailability).text.toString()
-        val department = findViewById<TextInputEditText>(R.id.spinnerDepartment).text.toString()
-        val specialization = findViewById<TextInputEditText>(R.id.spinnerSpecialization).text.toString()
-        val address = findViewById<TextInputEditText>(R.id.textInputEditTextAddress).text.toString()
-        val phone = findViewById<TextInputEditText>(R.id.textInputEditTextPhone).text.toString()
-        val surname = findViewById<TextInputEditText>(R.id.textInputEditTextLastName).text.toString()
-        val name = findViewById<TextInputEditText>(R.id.textInputEditTextFirstName).text.toString()
-
-        database = FirebaseDatabase.getInstance().getReference("Doctor")
-        val updateDoctor = mapOf(
-            "availability" to availability,
-            "department" to department,
-            "specialization" to specialization,
-            "address" to address,
-            "phone" to phone,
-            "surname" to surname,
-            "name" to name
-        )
-
-        database.child(username).updateChildren(updateDoctor)
-            .addOnSuccessListener {
-                Toast.makeText(this, "Doctor updated successfully", Toast.LENGTH_SHORT).show()
-                navigateBackToAdmin(adminName, adminSurname, adminNumber, adminUsername)
-            }
-            .addOnFailureListener {
-                Toast.makeText(this, "Failed to update doctor: ${it.message}", Toast.LENGTH_SHORT).show()
-            }
-    }
-
-    private fun navigateBackToAdmin(
-        adminName: String,
-        adminSurname: String,
-        adminNumber: String,
-        adminUsername: String
-    ) {
-        val intent = Intent(this, AdminActivity::class.java).apply {
-            putExtra("name", adminName)
-            putExtra("surname", adminSurname)
-            putExtra("number", adminNumber)
-            putExtra("userName", adminUsername)
-        }
-        startActivity(intent)
-        finish()
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 }

@@ -12,6 +12,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import okhttp3.*
+import org.json.JSONObject
+import java.io.IOException
 
 class NewsPatientActivity : BaseActivity() {
 
@@ -43,26 +46,51 @@ class NewsPatientActivity : BaseActivity() {
     }
 
     private fun loadNews() {
-        // Simulate API delay
-        newsRecyclerView.postDelayed({
-            val newsItems = listOf(
-                NewsItem(
-                    "New Breakthrough in Cancer Treatment",
-                    "May 15, 2023",
-                    "Researchers have discovered a new approach that significantly improves outcomes...",
-                    "https://example.com/cancer-breakthrough"
-                ),
-                NewsItem(
-                    "Hospital Wins Patient Care Award",
-                    "April 28, 2023",
-                    "Our hospital has been recognized for excellence in patient satisfaction...",
-                    "https://example.com/hospital-award"
-                )
-            )
+        val apiKey = "2ee6a80f01e04cf9ac2c1ccbd842bf99"
+        val url = "https://newsapi.org/v2/everything?q=health&language=en&sortBy=publishedAt&apiKey=2ee6a80f01e04cf9ac2c1ccbd842bf99"
 
-            newsRecyclerView.adapter = NewsAdapter(newsItems)
-            progressBar.visibility = View.GONE
-        }, 1500)
+        val request = Request.Builder().url(url).build()
+        val client = OkHttpClient()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                runOnUiThread {
+                    progressBar.visibility = View.GONE
+                    Toast.makeText(this@NewsPatientActivity, "Failed to load news", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (!response.isSuccessful) {
+                        runOnUiThread {
+                            progressBar.visibility = View.GONE
+                            Toast.makeText(this@NewsPatientActivity, "Unexpected response", Toast.LENGTH_SHORT).show()
+                        }
+                        return
+                    }
+
+                    val body = response.body?.string()
+                    val json = JSONObject(body)
+                    val articles = json.getJSONArray("articles")
+
+                    val newsList = mutableListOf<NewsItem>()
+                    for (i in 0 until articles.length()) {
+                        val article = articles.getJSONObject(i)
+                        val title = article.getString("title")
+                        val date = article.getString("publishedAt").substring(0, 10)
+                        val summary = article.optString("description", "No summary available")
+                        val url = article.getString("url")
+                        newsList.add(NewsItem(title, date, summary, url))
+                    }
+
+                    runOnUiThread {
+                        newsRecyclerView.adapter = NewsAdapter(newsList)
+                        progressBar.visibility = View.GONE
+                    }
+                }
+            }
+        })
     }
 
     data class NewsItem(
@@ -107,6 +135,7 @@ class NewsPatientActivity : BaseActivity() {
                 }
             }
         }
+
         override fun getItemCount(): Int = newsItems.size
     }
 }

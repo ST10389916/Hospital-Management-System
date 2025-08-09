@@ -1,6 +1,5 @@
 package za.ac.hospitalmanagementsystem
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import com.google.android.material.appbar.MaterialToolbar
@@ -14,12 +13,10 @@ class DoctorProfileActivity : DoctorBaseActivity() {
 
     private lateinit var etName: TextInputEditText
     private lateinit var etSurname: TextInputEditText
-    private lateinit var etEmail: TextInputEditText
+    // Removed etEmail
     private lateinit var etPhone: TextInputEditText
     private lateinit var etSpecialization: TextInputEditText
     private lateinit var btnEditProfile: MaterialButton
-
-    // Remove the username property here! Use the base class's protected username directly
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +24,7 @@ class DoctorProfileActivity : DoctorBaseActivity() {
 
         etName = findViewById(R.id.etName)
         etSurname = findViewById(R.id.etSurname)
-        etEmail = findViewById(R.id.etEmail)
+        // Removed etEmail initialization
         etPhone = findViewById(R.id.etPhone)
         etSpecialization = findViewById(R.id.etSpecialization)
         btnEditProfile = findViewById(R.id.btnEditProfile)
@@ -58,20 +55,29 @@ class DoctorProfileActivity : DoctorBaseActivity() {
             return
         }
 
-        database = FirebaseDatabase.getInstance().getReference("Doctors").child(username)
+        database = FirebaseDatabase.getInstance().getReference("Doctor").child(username)
+
         database.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
-                    etName.setText(snapshot.child("name").value?.toString() ?: "")
-                    etSurname.setText(snapshot.child("surname").value?.toString() ?: "")
-                    etEmail.setText(snapshot.child("email").value?.toString() ?: "")
-                    etPhone.setText(snapshot.child("number").value?.toString() ?: "")
-                    etSpecialization.setText(snapshot.child("specialization").value?.toString() ?: "")
+                    val name = snapshot.child("name").getValue(String::class.java) ?: ""
+                    val surname = snapshot.child("surname").getValue(String::class.java) ?: ""
+                    // Removed email retrieval
+                    val phone = snapshot.child("phone").getValue(String::class.java) ?: snapshot.child("number").getValue(String::class.java) ?: ""
+                    val specialization = snapshot.child("specialization").getValue(String::class.java) ?: ""
+
+                    etName.setText(name)
+                    etSurname.setText(surname)
+                    // Removed etEmail setText
+                    etPhone.setText(phone)
+                    etSpecialization.setText(specialization)
+                } else {
+                    Toast.makeText(this@DoctorProfileActivity, "Profile data not found", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(this@DoctorProfileActivity, "Failed to load profile", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@DoctorProfileActivity, "Failed to load profile: ${error.message}", Toast.LENGTH_SHORT).show()
             }
         })
     }
@@ -79,19 +85,18 @@ class DoctorProfileActivity : DoctorBaseActivity() {
     private fun saveProfileData() {
         val name = etName.text.toString().trim()
         val surname = etSurname.text.toString().trim()
-        val email = etEmail.text.toString().trim()
+        // Removed email validation and retrieval
         val phone = etPhone.text.toString().trim()
         val specialization = etSpecialization.text.toString().trim()
 
-        if (name.isEmpty() || surname.isEmpty() || email.isEmpty()) {
-            Toast.makeText(this, "Name, surname and email are required.", Toast.LENGTH_SHORT).show()
+        if (name.isEmpty() || surname.isEmpty()) {  // removed email from required
+            Toast.makeText(this, "Name and surname are required.", Toast.LENGTH_SHORT).show()
             return
         }
 
         val updates = mapOf<String, Any>(
             "name" to name,
             "surname" to surname,
-            "email" to email,
             "number" to phone,
             "specialization" to specialization
         )
@@ -111,4 +116,3 @@ class DoctorProfileActivity : DoctorBaseActivity() {
         return true
     }
 }
-

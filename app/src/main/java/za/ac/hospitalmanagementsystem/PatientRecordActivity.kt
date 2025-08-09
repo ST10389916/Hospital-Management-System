@@ -21,6 +21,11 @@ class PatientRecordActivity : AppCompatActivity() {
         setContentView(R.layout.activity_patient_record)
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
 
+        val allergyOptions = resources.getStringArray(R.array.allergy)
+        val allergyAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, allergyOptions)
+        val allergyDropdown = findViewById<AutoCompleteTextView>(R.id.spinnerAllergy)
+        allergyDropdown.setAdapter(allergyAdapter)
+
         val name: String = intent.getStringExtra("name").toString()
         val surname: String= intent.getStringExtra("surname").toString()
         val number: String= intent.getStringExtra("number").toString()
@@ -64,7 +69,7 @@ class PatientRecordActivity : AppCompatActivity() {
         val illness = findViewById<TextInputEditText>(R.id.textInputEditTextIllness)
         val medicalNo = findViewById<TextInputEditText>(R.id.textInputEditMedicalNo)
         val medication = findViewById<TextInputEditText>(R.id.textInputEditTextMedication)
-        val allergy = findViewById<Spinner>(R.id.spinnerAllergy)
+        val allergy = findViewById<AutoCompleteTextView>(R.id.spinnerAllergy)
         val treatment = findViewById<TextInputEditText>(R.id.textInputEditTextTreatment)
 
         val randomValues = Random.nextInt(1000)
@@ -72,7 +77,16 @@ class PatientRecordActivity : AppCompatActivity() {
         val database  = Firebase.database
         val myref = database.getReference("PatientRecord").child(randomValues.toString())
 
-        myref.setValue(PatientRecord(patientUsername,illness.text.toString(),medicalNo.text.toString(),medication.text.toString(),allergy.selectedItem.toString(),treatment.text.toString()))
+        myref.setValue(
+            PatientRecord(
+                patientUsername,
+                illness.text.toString(),
+                medicalNo.text.toString(),
+                medication.text.toString(),
+                allergy.text.toString(),
+                treatment.text.toString()
+            )
+        )
 
         val intent = Intent(this,DoctorActivity::class.java)
         intent.putExtra("username",doctorUsername)

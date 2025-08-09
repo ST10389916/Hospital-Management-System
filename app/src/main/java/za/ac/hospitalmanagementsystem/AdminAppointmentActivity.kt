@@ -83,7 +83,23 @@ class AdminAppointmentActivity : AdminBaseActivity() {
                     "Availability: $availability"
 
                 appointmentCard.findViewById<MaterialButton>(R.id.buttonEdit).setOnClickListener {
-                    goToEditAppointment(appointmentNo)
+                    val name = intent.getStringExtra("name").toString()
+                    val surname = intent.getStringExtra("surname").toString()
+                    val number = intent.getStringExtra("number").toString()
+                    val username = intent.getStringExtra("userName").toString()
+
+                    val intent = Intent(this, EditAppointmentActivity::class.java)
+                    intent.putExtra("appointmentNo", appointmentNo)
+                    intent.putExtra("name", name)
+                    intent.putExtra("surname", surname)
+                    intent.putExtra("number", number)
+                    intent.putExtra("userName", username)
+                    intent.putExtra("patient", patient)
+                    intent.putExtra("doctor", doctor)
+                    intent.putExtra("date", date)
+                    intent.putExtra("disease", disease)
+                    intent.putExtra("availability", availability)
+                    startActivity(intent)
                 }
 
                 appointmentCard.findViewById<MaterialButton>(R.id.buttonDelete).setOnClickListener {
@@ -103,17 +119,6 @@ class AdminAppointmentActivity : AdminBaseActivity() {
             Toast.makeText(this, "Appointment deleted", Toast.LENGTH_SHORT).show()
         }.addOnFailureListener {
             Toast.makeText(this, "Delete failed", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun goToEditAppointment(appointmentNo: String) {
-        Intent(this, EditAppointmentActivity::class.java).apply {
-            putExtra("appointmentNo", appointmentNo)
-            putExtra("name", name)
-            putExtra("surname", surname)
-            putExtra("number", number)
-            putExtra("userName", username)
-            startActivity(this)
         }
     }
 

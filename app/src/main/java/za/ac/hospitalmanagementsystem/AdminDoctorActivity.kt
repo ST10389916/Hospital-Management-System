@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textview.MaterialTextView
 import com.google.firebase.database.DataSnapshot
@@ -14,6 +15,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import za.ac.hospitalmanagementsystem.admin.AdminAISupportActivity
 import za.ac.hospitalmanagementsystem.admin.AdminBaseActivity
 
 class AdminDoctorActivity : AdminBaseActivity() {
@@ -43,6 +45,34 @@ class AdminDoctorActivity : AdminBaseActivity() {
 
         // Load doctors
         loadDoctors()
+
+        // Initialize BottomNavigationView
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        bottomNav.setOnItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.nav_doctors -> {
+                    goToDoctors(name, surname, number, username)
+                    true
+                }
+                R.id.nav_patients -> {
+                    goToPatients(name, surname, number, username)
+                    true
+                }
+                R.id.nav_appointments -> {
+                    goToAppointment(name, surname, number, username)
+                    true
+                }
+                R.id.nav_ai_support -> {
+                    goToAISupport(name, surname, number, username)
+                    true
+                }
+                R.id.nav_logout -> {
+                    goToLogin()
+                    true
+                }
+                else -> false
+            }
+        }
     }
 
     private fun loadDoctors() {
@@ -120,7 +150,49 @@ class AdminDoctorActivity : AdminBaseActivity() {
         onBackPressed()
         return true
     }
+    private fun goToAISupport(name: String?, surname: String?, number: String?, username: String?) {
+        val intent = Intent(this, AdminAISupportActivity::class.java)
+        intent.putExtra("name", name)
+        intent.putExtra("surname", surname)
+        intent.putExtra("number", number)
+        intent.putExtra("username", username)
+        startActivity(intent)
+    }
+    private fun goToDoctors(name: String?, surname: String?, number: String?, username: String?) {
+        val intent = Intent(this, AdminDoctorActivity::class.java)
+        intent.putExtra("name", name)
+        intent.putExtra("surname", surname)
+        intent.putExtra("number", number)
+        intent.putExtra("userName", username)
+        startActivity(intent)
+    }
 
+    private fun goToPatients(name: String?, surname: String?, number: String?, username: String?) {
+        val intent = Intent(this, AdminPatientsActivity::class.java)
+        intent.putExtra("name", name)
+        intent.putExtra("surname", surname)
+        intent.putExtra("number", number)
+        intent.putExtra("userName", username)
+        startActivity(intent)
+    }
+
+    private fun goToDoctorRegister() {
+        val intent = Intent(this, DoctorRegisterActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun goToAppointment(name: String?, surname: String?, number: String?, username: String?) {
+        val intent = Intent(this, AdminAppointmentActivity::class.java)
+        intent.putExtra("name", name)
+        intent.putExtra("surname", surname)
+        intent.putExtra("number", number)
+        intent.putExtra("userName", username)
+        startActivity(intent)
+    }
+    private fun goToLogin() {
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
+    }
     data class Doctor(
         val name: String = "",
         val surname: String = "",

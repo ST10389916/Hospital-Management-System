@@ -1,6 +1,4 @@
 package za.ac.hospitalmanagementsystem
-
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -10,7 +8,6 @@ import androidx.appcompat.widget.Toolbar
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.itextpdf.text.Document
-import com.itextpdf.text.Paragraph
 import com.itextpdf.text.pdf.PdfWriter
 import org.apache.poi.hssf.usermodel.HSSFWorkbook
 import org.apache.poi.xwpf.usermodel.XWPFDocument

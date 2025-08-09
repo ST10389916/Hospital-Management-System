@@ -148,7 +148,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:background="@drawable/button_background"
+                android:backgroundTint="@color/primaryDark"
                 android:text="Submit"
                 android:textAllCaps="false"
                 android:textColor="#fff"

@@ -127,12 +127,13 @@
                         android:textColorHint="@android:color/darker_gray"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Availability Spinner -->
+                <!-- Availability Dropdown -->
                 <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
+                    android:hint="Availability"
                     app:boxStrokeColor="?attr/colorPrimary"
                     app:hintTextColor="?attr/colorPrimary">
 
@@ -140,17 +141,20 @@
                         android:id="@+id/spinnerAvailability"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Availability"
+                        android:inputType="none"
                         android:textColor="@android:color/black"
-                        android:textColorHint="@android:color/darker_gray"/>
+                        android:textColorHint="@android:color/darker_gray"
+                        android:clickable="true"
+                        android:focusable="false"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Department Spinner -->
+                <!-- Department Dropdown -->
                 <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
+                    android:hint="Department"
                     app:boxStrokeColor="?attr/colorPrimary"
                     app:hintTextColor="?attr/colorPrimary">
 
@@ -158,17 +162,20 @@
                         android:id="@+id/spinnerDepartment"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Department"
+                        android:inputType="none"
                         android:textColor="@android:color/black"
-                        android:textColorHint="@android:color/darker_gray"/>
+                        android:textColorHint="@android:color/darker_gray"
+                        android:clickable="true"
+                        android:focusable="false"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Specialization Spinner -->
+                <!-- Specialization Dropdown -->
                 <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
+                    android:hint="Specialization"
                     app:boxStrokeColor="?attr/colorPrimary"
                     app:hintTextColor="?attr/colorPrimary">
 
@@ -176,9 +183,11 @@
                         android:id="@+id/spinnerSpecialization"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Specialization"
+                        android:inputType="none"
                         android:textColor="@android:color/black"
-                        android:textColorHint="@android:color/darker_gray"/>
+                        android:textColorHint="@android:color/darker_gray"
+                        android:clickable="true"
+                        android:focusable="false"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Submit Button -->
@@ -191,7 +200,7 @@
                     app:backgroundTint="?attr/colorPrimary"
                     app:cornerRadius="8dp"
                     android:textColor="@android:color/white"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
