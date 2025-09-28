@@ -33,11 +33,8 @@ class AdminDoctorActivity : AdminBaseActivity() {
         noDoctorsText = findViewById(R.id.textViewNoDoctors)
 
         // Setup toolbar
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
         supportActionBar?.apply {
             title = "Manage Doctors"
-            setDisplayHomeAsUpEnabled(true)
         }
 
         // Initialize database reference

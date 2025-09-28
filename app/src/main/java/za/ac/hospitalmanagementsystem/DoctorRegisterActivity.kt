@@ -49,9 +49,9 @@ class DoctorRegisterActivity : AppCompatActivity() {
             val username: String = findViewById<TextInputEditText>(R.id.textInputEditTextEmail).text.toString()
             if (username.isNotEmpty()) {
                 registerDoctor(username)
-                val intent = Intent(this, AdminActivity::class.java)
-                startActivity(intent)
+                goToLoginPage()
             }
+
         }
     }
 

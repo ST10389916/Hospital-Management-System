@@ -1,6 +1,7 @@
 package za.ac.hospitalmanagementsystem.admin
 
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.inputmethod.EditorInfo
 import android.view.View
@@ -39,7 +40,7 @@ class AdminAISupportActivity : AdminBaseActivity() {
             val question = questionInput.text.toString().trim()
             if (question.isNotEmpty()) {
                 askButton.isEnabled = false        // Disable button here
-                askOpenAI(question)
+                askAzureOpenAI(question)
             } else {
                 questionInput.error = "Please enter a question"
             }
@@ -50,7 +51,7 @@ class AdminAISupportActivity : AdminBaseActivity() {
                 val question = questionInput.text.toString().trim()
                 if (question.isNotEmpty()) {
                     askButton.isEnabled = false      // Disable button here
-                    askOpenAI(question)
+                    askAzureOpenAI(question)
                 } else {
                     questionInput.error = "Please enter a question"
                 }
@@ -59,7 +60,7 @@ class AdminAISupportActivity : AdminBaseActivity() {
         }
     }
 
-    private fun askOpenAI(question: String, retryCount: Int = 0) {
+    private fun askAzureOpenAI(question: String, retryCount: Int = 0) {
         if (retryCount == 0) {
             runOnUiThread {
                 responseText.text = "Please wait..."
@@ -71,33 +72,41 @@ class AdminAISupportActivity : AdminBaseActivity() {
         if (retryCount > 5) {
             runOnUiThread {
                 progressBar.visibility = View.GONE
-                askButton.isEnabled = true        // Enable button here on too many retries
+                askButton.isEnabled = true
                 showErrorDialog("Too many retries due to rate limiting. Please try again later.")
             }
             return
         }
-
-        val apiKey = "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" // Replace with your actual OpenAI API key
-        val url = "https://api.openai.com/v1/chat/completions"
+        val apiKey = "6iry3Aofh6tipi3tDlbIqVr0JPuWIguZZMK6cxlsQkbLOfQhdR6rJQQJ99BIACHYHv6XJ3w3AAAAACOG5ygd"
+        val deploymentId = "gpt-35-turbo"  // Same as in your C# code
+        //val endpoint = "https://justi-mfyfvof6-eastus2.cognitiveservices.azure.com/"
+        val apiVersion = "2023-05-15" // Or latest supported
+        val endpoint ="https://justi-mfyfvof6-eastus2.cognitiveservices.azure.com/openai/deployments/$deploymentId/chat/completions?api-version=$apiVersion"
 
         val jsonBody = JSONObject().apply {
-            put("model", "gpt-3.5-turbo")
-            put("max_tokens", 500)
-            put("temperature", 0)
             put("messages", JSONArray().apply {
+                put(JSONObject().apply {
+                    put("role", "system")
+                    put("content", "You are an AI assistant that helps people find information.")
+                })
                 put(JSONObject().apply {
                     put("role", "user")
                     put("content", question)
                 })
             })
+            put("temperature", 0.7)
+            put("max_tokens", 800)
+            put("top_p", 0.95)
+            put("frequency_penalty", 0)
+            put("presence_penalty", 0)
         }
 
         val requestBody = jsonBody.toString().toRequestBody("application/json".toMediaTypeOrNull())
 
         val request = Request.Builder()
-            .url(url)
+            .url(endpoint)
             .addHeader("Content-Type", "application/json")
-            .addHeader("Authorization", "Bearer $apiKey")
+            .addHeader("api-key", apiKey)
             .post(requestBody)
             .build()
 
@@ -105,28 +114,28 @@ class AdminAISupportActivity : AdminBaseActivity() {
             override fun onFailure(call: Call, e: IOException) {
                 runOnUiThread {
                     progressBar.visibility = View.GONE
-                    askButton.isEnabled = true    // Enable button on failure
+                    askButton.isEnabled = true
                     showErrorDialog("Network error: ${e.localizedMessage}")
                 }
             }
 
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
-                Log.d("OPENAI_RESPONSE", body ?: "Empty body")
+                Log.d("AZURE_OPENAI_RESPONSE", body ?: "Empty body")
 
                 if (response.code == 429) {
-                    // Rate limited - retry with exponential backoff
+                    // Retry using exponential backoff
                     val delayMillis = (1000L * Math.pow(2.0, retryCount.toDouble())).toLong()
-                    Log.d("OPENAI_RETRY", "Rate limited. Retrying in $delayMillis ms...")
-                    Thread.sleep(delayMillis)
-                    askOpenAI(question, retryCount + 1)
+                    Handler(mainLooper).postDelayed({
+                        askAzureOpenAI(question, retryCount + 1)
+                    }, delayMillis)
                     return
                 }
 
                 if (!response.isSuccessful || body == null) {
                     runOnUiThread {
                         progressBar.visibility = View.GONE
-                        askButton.isEnabled = true    // Enable button on API error
+                        askButton.isEnabled = true
                         showErrorDialog("API error: ${response.code} - ${response.message}")
                     }
                     return
@@ -140,13 +149,13 @@ class AdminAISupportActivity : AdminBaseActivity() {
 
                     runOnUiThread {
                         progressBar.visibility = View.GONE
-                        askButton.isEnabled = true    // Enable button on success
+                        askButton.isEnabled = true
                         responseText.text = textResult.trim()
                     }
                 } catch (e: Exception) {
                     runOnUiThread {
                         progressBar.visibility = View.GONE
-                        askButton.isEnabled = true    // Enable button on parse error
+                        askButton.isEnabled = true
                         showErrorDialog("Parsing error: ${e.localizedMessage}")
                     }
                 }

@@ -19,7 +19,6 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             android:elevation="4dp"
-            app:navigationIcon="?attr/homeAsUpIndicator"
             app:titleTextColor="@android:color/white"
             app:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar" />
 

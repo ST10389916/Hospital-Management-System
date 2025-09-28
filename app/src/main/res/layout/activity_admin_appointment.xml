@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".AdminAppointmentActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:orientation="vertical">
 
         <com.google.android.material.appbar.MaterialToolbar
@@ -18,7 +20,6 @@
             android:background="?attr/colorPrimary"
             android:elevation="4dp"
             android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
-            app:navigationIcon="@drawable/ic_arrow_back"
             app:title="Appointments"
             app:titleTextColor="@android:color/white" />
 
@@ -30,7 +31,7 @@
             android:textStyle="bold"
             android:gravity="center"
             android:padding="16dp"
-            android:textColor="?attr/colorPrimary"/>
+            android:textColor="?attr/colorPrimary" />
 
         <LinearLayout
             android:id="@+id/appointmentsContainer"
@@ -38,5 +39,17 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="8dp" />
+
     </LinearLayout>
-</ScrollView>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        app:itemIconTint="@drawable/nav_item_color_state"
+        app:itemTextColor="@drawable/nav_item_color_state"
+        app:menu="@menu/admin_bottom_nav_menu"
+        app:labelVisibilityMode="labeled" />
+
+</LinearLayout>

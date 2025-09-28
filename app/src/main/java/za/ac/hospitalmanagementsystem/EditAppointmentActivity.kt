@@ -154,7 +154,7 @@ class EditAppointmentActivity : AppCompatActivity() {
             if (task.isSuccessful) {
                 Toast.makeText(this, "Appointment Updated", Toast.LENGTH_SHORT).show()
 
-                val intent = Intent(this, AdminActivity::class.java)
+                val intent = Intent(this, AdminAppointmentActivity::class.java)
                 intent.putExtra("name", name)
                 intent.putExtra("surname", surname)
                 intent.putExtra("number", number)
