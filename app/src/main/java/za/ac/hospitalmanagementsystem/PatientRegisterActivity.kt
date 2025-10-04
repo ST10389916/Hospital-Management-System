@@ -62,6 +62,7 @@ class PatientRegisterActivity : AppCompatActivity() {
         }
 
         val database = Firebase.database
+
         val myref = database.getReference(rolename).child(email.text.toString())
 
         myref.setValue(
