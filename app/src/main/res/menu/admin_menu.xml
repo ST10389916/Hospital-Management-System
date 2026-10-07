@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/doctorRegister"
+        android:title="@string/register_doctor"
+        android:icon="@drawable/doctor"/>
+    <item
+        android:id="@+id/patients"
+        android:title="@string/patients"
+        android:icon="@drawable/patient"/>
+    <item
+        android:id="@+id/doctors"
+        android:title="@string/doctor"
+        android:icon="@drawable/doctor"/>
+    <item
+        android:id="@+id/appointment"
+        android:title="@string/appointment"
+        android:icon="@drawable/ic_myfeed"/>
+    <item
+        android:id="@+id/report"
+        android:title="@string/save_report"
+        android:icon="@drawable/ic_myfeed"/>
+    <item
+        android:id="@+id/logout"
+        android:title="@string/logout"
+        android:icon="@drawable/ic_logout"/>
+</menu>
